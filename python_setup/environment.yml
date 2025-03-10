@@ -11,9 +11,10 @@ dependencies:
   - simple-parsing=0.1.7
   - tqdm=4.67.1
   - nibabel=5.3.2
-  - wandb=19.7
-  - typing=3.10.0.0
+  - wandb
+  - typing
   - pytest=8.3.5
+  - mkdocs=1.6.1
   - pip:
       - torch
       - torch_vision
