@@ -1,0 +1,20 @@
+name: brainseg_env
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - poetry=2.1.1
+  - pip
+  - scipy=1.15.2
+  - numpy=2.2.3
+  - plotly=6.0.0
+  - simple-parsing=0.1.7
+  - tqdm=4.67.1
+  - nibabel=5.3.2
+  - wandb
+  - typing
+  - pytest=8.3.5
+  - mkdocs=1.6.1
+  - pip:
+      - torch
+      - torch_vision

@@ -1,0 +1,39 @@
+site_name: Brain Segmentation
+site_description: Documentation for the Brain Segmentation project
+site_author: Brain Segmentation Team
+
+# Repository information
+repo_name: BrainSegmentation
+repo_url: https://github.com/halirutan/BrainSegmentation
+edit_uri: edit/main/docs/
+
+# Copyright
+copyright: Copyright &copy; 2023 Brain Segmentation Team
+
+# Configuration
+theme:
+  name: readthedocs
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - codehilite
+  - footnotes
+  - meta
+  - toc:
+      permalink: true
+
+# Navigation structure
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: installation.md
+    - Usage: usage.md
+  - Examples: examples.md
+  - API Reference: api_reference.md
+  - Contributing: contributing.md
+  - License: license.md
+
+# Plugins
+plugins:
+  - search
