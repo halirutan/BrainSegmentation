@@ -45,5 +45,6 @@ plugins:
       handlers:
         python:
           paths: [ src ]
-          docstring_style: google
+          options:
+            docstring_style: google
           show_source: true
