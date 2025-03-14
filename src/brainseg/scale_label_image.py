@@ -50,7 +50,26 @@ def filter_fft(tensor: torch.Tensor, sigma: float) -> torch.Tensor:
 
 
 def gaussian_kernel_1d(sigma: float, device: Union[str, torch.device]='cpu', dtype=torch.float32):
-    """Creates a 1D Gaussian kernel given a standard deviation `sigma`."""
+    """
+        Generates a 1D Gaussian kernel.
+
+        This function creates a 1D Gaussian kernel of a specified standard deviation
+        (sigma). The kernel size is dynamically calculated to encompass values
+        within three standard deviations, ensuring sufficient precision
+        while maintaining computational efficiency. The resulting kernel values
+        are normalized so that their sum equals one.
+
+        Args:
+            sigma (float): The standard deviation of the Gaussian distribution.
+                Determines the width of the Gaussian curve.
+            device (Union[str, torch.device]): Specifies the device where the tensor
+                will be created. Default is 'cpu'.
+            dtype: Specifies the data type of the resulting tensor. Default is
+                torch.float32.
+
+        Returns:
+            Tensor: A tensor representing the 1D Gaussian kernel.
+    """
     kernel_size = int(2 * (3.0 * sigma) + 1)  # Approximate kernel size
     if kernel_size % 2 == 0:
         kernel_size += 1  # Ensure odd size

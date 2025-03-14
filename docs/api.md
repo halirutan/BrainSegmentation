@@ -8,6 +8,4 @@ The `brainseg` package contains modules for brain segmentation tasks.
 
 ### scale_label_image
 
-This module provides functions for resampling and smoothing label images.
-
-::: brainseg
+::: brainseg.scale_label_image
