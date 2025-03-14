@@ -26,14 +26,26 @@ markdown_extensions:
 # Navigation structure
 nav:
   - Home: index.md
-  - Getting Started:
-    - Installation: installation.md
-    - Usage: usage.md
-  - Examples: examples.md
-  - API Reference: api_reference.md
-  - Contributing: contributing.md
-  - License: license.md
+  - Installation: installation.md
+  - Contributing:
+      - Overview: contribute/contributing.md
+      - Writing Documentation: contribute/howto_write_docs.md
+      - Writing Code: contribute/howto_write_code.md
+  - Creating Training Data:
+      - General Approach: training_data/overview.md
+      - CHARM Segmentation: training_data/charm.md
+      - SynthSeg Segmentation: training_data/synth_seg.md
+  - Automatic Code Documentation:
+    - API Reference: api.md
 
 # Plugins
 plugins:
   - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [ src ]
+          selection:
+            docstring_style: google
+          rendering:
+            show_source: true

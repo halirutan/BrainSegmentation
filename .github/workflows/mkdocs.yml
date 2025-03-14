@@ -20,8 +20,8 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install mkdocs
-        run: pip install mkdocs
+      - name: Install mkdocs and plugins
+        run: pip install mkdocs mkdocstrings mkdocstrings-python
 
       - name: Deploy to GitHub Pages
         env:
