@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Brain Segmentation Team" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>API Reference - Brain Segmentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "API Reference";
+        var mkdocs_page_input_path = "api.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Brain Segmentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Contributing</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../contribute/contributing/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../contribute/howto_write_docs/">Writing Documentation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../contribute/howto_write_code/">Writing Code</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Creating Training Data</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../training_data/overview/">General Approach</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../training_data/charm/">CHARM Segmentation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../training_data/synth_seg/">SynthSeg Segmentation</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Automatic Code Documentation</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">API Reference</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#brainseg">brainseg</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#scale_label_image">scale_label_image</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#brainseg.scale_label_image">scale_label_image</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#brainseg.scale_label_image.Options">Options</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#brainseg.scale_label_image.Options.crop_size">crop_size</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#brainseg.scale_label_image.Options.image_file">image_file</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#brainseg.scale_label_image.Options.output_dir">output_dir</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#brainseg.scale_label_image.Options.resolution">resolution</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#brainseg.scale_label_image.Options.sigma">sigma</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#brainseg.scale_label_image.filter_fft">filter_fft</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#brainseg.scale_label_image.filter_separable">filter_separable</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#brainseg.scale_label_image.gaussian_kernel_1d">gaussian_kernel_1d</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#brainseg.scale_label_image.gaussian_kernel_3d_fft">gaussian_kernel_3d_fft</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#brainseg.scale_label_image.resample_label_image">resample_label_image</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Brain Segmentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Automatic Code Documentation</li>
+      <li class="breadcrumb-item active">API Reference</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/halirutan/BrainSegmentation/edit/main/docs/api.md">Edit on BrainSegmentation</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="api-reference">API Reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h1>
+<p>This section provides detailed API documentation for the Brain Segmentation project.</p>
+<h2 id="brainseg">brainseg<a class="headerlink" href="#brainseg" title="Permanent link">&para;</a></h2>
+<p>The <code>brainseg</code> package contains modules for brain segmentation tasks.</p>
+<h3 id="scale_label_image">scale_label_image<a class="headerlink" href="#scale_label_image" title="Permanent link">&para;</a></h3>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="brainseg.scale_label_image"></a>
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="brainseg.scale_label_image.Options" class="doc doc-heading">
+            <code>Options</code>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+<a href="#brainseg.scale_label_image.Options" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>src/brainseg/scale_label_image.py</code></summary>
+                <pre class="codehilite"><code class="language-python">@dataclass
+class Options:
+    image_file: str
+    """Input label image for rescaling."""
+
+    output_dir: str
+    """
+    Output directory where to store the resampled image.
+    """
+
+    resolution: float
+    """
+    Resolution in mm for the resampled label image.
+    """
+
+    sigma: Optional[float] = None
+    """If not None, it must be a float value specifying the standard deviation of the Gaussian kernel to be used for smoothing the label image."""
+
+    crop_size: int = None
+    """If not None, it must be an int or a list of integers specifying the output size."""</code></pre>
+              </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="brainseg.scale_label_image.Options.crop_size" class="doc doc-heading">
+            <code class=" language-python">crop_size = None</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#brainseg.scale_label_image.Options.crop_size" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>If not None, it must be an int or a list of integers specifying the output size.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="brainseg.scale_label_image.Options.image_file" class="doc doc-heading">
+            <code class=" language-python">image_file</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#brainseg.scale_label_image.Options.image_file" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Input label image for rescaling.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="brainseg.scale_label_image.Options.output_dir" class="doc doc-heading">
+            <code class=" language-python">output_dir</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#brainseg.scale_label_image.Options.output_dir" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Output directory where to store the resampled image.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="brainseg.scale_label_image.Options.resolution" class="doc doc-heading">
+            <code class=" language-python">resolution</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#brainseg.scale_label_image.Options.resolution" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Resolution in mm for the resampled label image.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="brainseg.scale_label_image.Options.sigma" class="doc doc-heading">
+            <code class=" language-python">sigma = None</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#brainseg.scale_label_image.Options.sigma" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>If not None, it must be a float value specifying the standard deviation of the Gaussian kernel to be used for smoothing the label image.</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="brainseg.scale_label_image.filter_fft" class="doc doc-heading">
+            <code class=" language-python">filter_fft(tensor, sigma)</code>
+
+<a href="#brainseg.scale_label_image.filter_fft" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Applies a 3D Gaussian filter using FFT.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/brainseg/scale_label_image.py</code></summary>
+              <pre class="codehilite"><code class="language-python">def filter_fft(tensor: torch.Tensor, sigma: float) -&gt; torch.Tensor:
+    """Applies a 3D Gaussian filter using FFT."""
+    assert tensor.ndim == 3, "Input tensor must be 3D"
+
+    device = tensor.device
+    shape = tensor.shape
+
+    # Compute FFT of the input tensor
+    tensor_fft = torch.fft.fftn(tensor)
+
+    # Compute FFT of the Gaussian kernel
+    kernel_fft = gaussian_kernel_3d_fft(shape, sigma, device=device)
+
+    # Multiply in the frequency domain
+    filtered_fft = tensor_fft * kernel_fft
+
+    # Inverse FFT to return to the spatial domain
+    filtered = torch.fft.ifftn(filtered_fft).real  # Take only real part
+
+    return filtered</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="brainseg.scale_label_image.filter_separable" class="doc doc-heading">
+            <code class=" language-python">filter_separable(tensor, kernel)</code>
+
+<a href="#brainseg.scale_label_image.filter_separable" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Applies a 3D Gaussian filter using three separable 1D convolutions.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/brainseg/scale_label_image.py</code></summary>
+              <pre class="codehilite"><code class="language-python">def filter_separable(tensor: torch.Tensor, kernel: torch.Tensor) -&gt; torch.Tensor:
+    """Applies a 3D Gaussian filter using three separable 1D convolutions."""
+    assert tensor.ndim == 3, "Input tensor must be 3D"
+    assert tensor.device == kernel.device, "Input and kernel must be on the same device"
+    assert kernel.ndim == 1, "Kernel must be 1D"
+
+    k1d = kernel.view(1, 1, -1).to(tensor.dtype)
+    for _ in range(3):
+        tensor = conv1d(tensor.reshape(-1, 1, tensor.size(2)), k1d, padding="same").view(*tensor.shape)
+        tensor = tensor.permute(2, 0, 1)
+    return tensor</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="brainseg.scale_label_image.gaussian_kernel_1d" class="doc doc-heading">
+            <code class=" language-python">gaussian_kernel_1d(sigma, device='cpu', dtype=torch.float32)</code>
+
+<a href="#brainseg.scale_label_image.gaussian_kernel_1d" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Generates a 1D Gaussian kernel.</p>
+<p>This function creates a 1D Gaussian kernel of a specified standard deviation
+(sigma). The kernel size is dynamically calculated to encompass values
+within three standard deviations, ensuring sufficient precision
+while maintaining computational efficiency. The resulting kernel values
+are normalized so that their sum equals one.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>sigma</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The standard deviation of the Gaussian distribution.
+Determines the width of the Gaussian curve.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>device</code></b>
+                  (<code><span title="typing.Union">Union</span>[<span title="str">str</span>, <span title="torch.device">device</span>]</code>, default:
+                      <code>&#39;cpu&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Specifies the device where the tensor
+will be created. Default is 'cpu'.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>dtype</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Specifies the data type of the resulting tensor. Default is
+torch.float32.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>Tensor</code></b>              –
+              <div class="doc-md-description">
+                <p>A tensor representing the 1D Gaussian kernel.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/brainseg/scale_label_image.py</code></summary>
+              <pre class="codehilite"><code class="language-python">def gaussian_kernel_1d(sigma: float, device: Union[str, torch.device]='cpu', dtype=torch.float32):
+    """
+        Generates a 1D Gaussian kernel.
+
+        This function creates a 1D Gaussian kernel of a specified standard deviation
+        (sigma). The kernel size is dynamically calculated to encompass values
+        within three standard deviations, ensuring sufficient precision
+        while maintaining computational efficiency. The resulting kernel values
+        are normalized so that their sum equals one.
+
+        Args:
+            sigma (float): The standard deviation of the Gaussian distribution.
+                Determines the width of the Gaussian curve.
+            device (Union[str, torch.device]): Specifies the device where the tensor
+                will be created. Default is 'cpu'.
+            dtype: Specifies the data type of the resulting tensor. Default is
+                torch.float32.
+
+        Returns:
+            Tensor: A tensor representing the 1D Gaussian kernel.
+    """
+    kernel_size = int(2 * (3.0 * sigma) + 1)  # Approximate kernel size
+    if kernel_size % 2 == 0:
+        kernel_size += 1  # Ensure odd size
+
+    coords = torch.arange(kernel_size, dtype=dtype, device=device) - kernel_size // 2
+    g = torch.exp(-0.5 * (coords / sigma) ** 2)
+    g /= g.sum()
+    return g</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="brainseg.scale_label_image.gaussian_kernel_3d_fft" class="doc doc-heading">
+            <code class=" language-python">gaussian_kernel_3d_fft(shape, sigma, device='cpu')</code>
+
+<a href="#brainseg.scale_label_image.gaussian_kernel_3d_fft" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Creates a 3D Gaussian kernel in the frequency domain using FFT.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/brainseg/scale_label_image.py</code></summary>
+              <pre class="codehilite"><code class="language-python">def gaussian_kernel_3d_fft(shape, sigma, device='cpu'):
+    """Creates a 3D Gaussian kernel in the frequency domain using FFT."""
+    nz, ny, nx = shape
+    z = torch.fft.fftfreq(nz, device=device).view(nz, 1, 1)
+    y = torch.fft.fftfreq(ny, device=device).view(1, ny, 1)
+    x = torch.fft.fftfreq(nx, device=device).view(1, 1, nx)
+    squared_dist = (x ** 2 + y ** 2 + z ** 2)
+    kernel_fft = torch.exp(-2 * (torch.pi ** 2) * (sigma ** 2) * squared_dist)
+    return kernel_fft</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="brainseg.scale_label_image.resample_label_image" class="doc doc-heading">
+            <code class=" language-python">resample_label_image(nifti, resolution_out, sigma=None)</code>
+
+<a href="#brainseg.scale_label_image.resample_label_image" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Resample a label image to a new resolution.
+Note: This is intended for internal use only to upsample label images that are in a too low resolution.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>nifti</code></b>
+                  (<code><span title="nibabel.Nifti1Image">Nifti1Image</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The input label image represented as a nib.Nifti1Image object.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>resolution_out</code></b>
+                  (<code><span title="typing.Union">Union</span>[<span title="float">float</span>, <span title="typing.List">List</span>[<span title="float">float</span>]]</code>)
+              –
+              <div class="doc-md-description">
+                <p>The desired output resolution. It can be a single float value or a list of three float values
+representing the desired voxel size in mm in x, y, and z directions respectively.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sigma</code></b>
+                  (<code><span title="typing.Optional">Optional</span>[<span title="float">float</span>]</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>If not None, it must be a float value specifying the standard deviation of the Gaussian kernel to be
+used for smoothing the label image.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>        
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/brainseg/scale_label_image.py</code></summary>
+              <pre class="codehilite"><code class="language-python">def resample_label_image(nifti: nib.Nifti1Image,
+                         resolution_out: Union[float, List[float]],
+                         sigma: Optional[float] = None) -&gt; nib.Nifti1Image:
+    """
+    Resample a label image to a new resolution.
+    Note: This is intended for internal use only to upsample label images that are in a too low resolution.
+
+    Args:
+        nifti: The input label image represented as a nib.Nifti1Image object.
+        resolution_out: The desired output resolution. It can be a single float value or a list of three float values
+            representing the desired voxel size in mm in x, y, and z directions respectively.
+        sigma: If not None, it must be a float value specifying the standard deviation of the Gaussian kernel to be
+            used for smoothing the label image.
+    Returns:
+        The resampled label image represented as a nib.Nifti1Image object.
+    """
+    if type(resolution_out) is float:
+        resolution_out = np.array([resolution_out] * 3)
+    else:
+        resolution_out = np.array(resolution_out)
+    data_resampled = do_resample(nifti, resolution_out)
+    if sigma is not None:
+        data_resampled = smooth_label_image(data_resampled, sigma)
+    header = nifti.header
+    # noinspection PyUnresolvedReferences
+    header.set_zooms(resolution_out)
+    return nib.Nifti1Image(data_resampled.numpy(force=True).astype(np.uint16), nifti.affine, header)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../training_data/synth_seg/" class="btn btn-neutral float-left" title="SynthSeg Segmentation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>Copyright &copy; 2023 Brain Segmentation Team</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/halirutan/BrainSegmentation" class="fa fa-code-fork" style="color: #fcfcfc"> BrainSegmentation</a>
+        </span>
+    
+    
+      <span><a href="../training_data/synth_seg/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
