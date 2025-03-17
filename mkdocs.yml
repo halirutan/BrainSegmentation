@@ -35,6 +35,7 @@ nav:
       - General Approach: training_data/overview.md
       - CHARM Segmentation: training_data/charm.md
       - SynthSeg Segmentation: training_data/synth_seg.md
+      - FullHeadSeg: training_data/FullHeadSeg.md
   - Automatic Code Documentation:
     - API Reference: api.md
 
