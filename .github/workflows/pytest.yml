@@ -20,4 +20,4 @@ jobs:
           poetry install
       - name: Run PyTest
         run: |
-          pytest --junitxml=junit/test-results.xml
+          poetry run pytest --junitxml=junit/test-results.xml
