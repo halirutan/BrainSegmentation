@@ -4,107 +4,101 @@ import torch
 import nibabel as nib
 import numpy as np
 import os
-from typing import Union, List, Optional, Any
+from typing import Union, List, Optional
 from dataclasses import dataclass
 
-from nibabel.arrayproxy import ArrayLike
-from numpy import ndarray, dtype, floating
-from numpy._core.numeric import _SCT
 from simple_parsing import ArgumentParser
 import logging
-from torch.nn.functional import conv1d
 import tqdm
 
+logger = logging.getLogger("Resample")
 
-def gaussian_kernel_3d_fft(shape, sigma, device='cpu'):
-    """Creates a 3D Gaussian kernel in the frequency domain using FFT."""
+def gaussian_kernel_3d_fft(
+        shape: tuple[int, int, int] | torch.Size,
+        sigma: float,
+        device: str | torch.device='cpu') -> torch.Tensor:
+    """
+        Generates a 3D Gaussian kernel in the frequency domain using FFT.
+
+        This function computes a 3D Gaussian kernel directly in the frequency domain.
+        It takes the shape of the desired kernel, the standard deviation (sigma),
+        and the device where the computation should be performed.
+        The Gaussian kernel in the frequency domain is computed based on the squared Euclidean distance
+        and the provided sigma.
+
+        Args:
+            shape: The shape of the 3D Gaussian kernel, defined as (nz, ny, nx), where nz, ny, and nx are the number of
+                elements along the z, y, and x dimensions respectively.
+            sigma: The standard deviation of the Gaussian distribution.
+                It determines the spread of the Gaussian kernel.
+            device: The device where the computation should be performed,
+                either 'cpu' or 'cuda'. The default is 'cpu'.
+
+        Returns:
+            torch.Tensor: A 3D tensor representing the Gaussian kernel in the
+            frequency domain. The tensor has the same shape as the input `shape`.
+    """
+    if not sigma > 0.0:
+        raise ValueError(f"Sigma must be positive, got {sigma}")
     nz, ny, nx = shape
     z = torch.fft.fftfreq(nz, device=device).view(nz, 1, 1)
     y = torch.fft.fftfreq(ny, device=device).view(1, ny, 1)
     x = torch.fft.fftfreq(nx, device=device).view(1, 1, nx)
     squared_dist = (x ** 2 + y ** 2 + z ** 2)
-    kernel_fft = torch.exp(-2 * (torch.pi ** 2) * (sigma ** 2) * squared_dist)
+    kernel_fft = torch.exp(-2 * (torch.pi ** 2) * (sigma ** 2) * squared_dist / (nx * ny * nz))
     return kernel_fft
 
 
 def filter_fft(tensor: torch.Tensor, sigma: float) -> torch.Tensor:
-    """Applies a 3D Gaussian filter using FFT."""
+    """
+    Filters a 3D tensor using a Gaussian kernel in the frequency domain.
+
+    This function performs filtering of a 3-dimensional input tensor using a Gaussian kernel in the Fourier domain.
+    The input tensor is transformed into the frequency domain via FFT, multiplied element-wise with the FFT of the
+    Gaussian kernel, and then transformed back to the spatial domain using the inverse FFT.
+
+    Args:
+        tensor: A 3D PyTorch tensor to be filtered. The tensor must have three dimensions (ndim == 3).
+        sigma: The standard deviation of the Gaussian kernel used for filtering.
+
+    Returns:
+        torch.Tensor: The filtered tensor in the spatial domain.
+    """
     assert tensor.ndim == 3, "Input tensor must be 3D"
 
     device = tensor.device
     shape = tensor.shape
 
-    # Compute FFT of the input tensor
     tensor_fft = torch.fft.fftn(tensor)
-
-    # Compute FFT of the Gaussian kernel
     kernel_fft = gaussian_kernel_3d_fft(shape, sigma, device=device)
-
-    # Multiply in the frequency domain
     filtered_fft = tensor_fft * kernel_fft
-
-    # Inverse FFT to return to the spatial domain
-    filtered = torch.fft.ifftn(filtered_fft).real  # Take only real part
-
+    filtered = torch.fft.ifftn(filtered_fft).real
     return filtered
 
-
-def gaussian_kernel_1d(sigma: float, device: Union[str, torch.device]='cpu', dtype=torch.float32):
-    """
-        Generates a 1D Gaussian kernel.
-
-        This function creates a 1D Gaussian kernel of a specified standard deviation
-        (sigma). The kernel size is dynamically calculated to encompass values
-        within three standard deviations, ensuring sufficient precision
-        while maintaining computational efficiency. The resulting kernel values
-        are normalized so that their sum equals one.
-
-        Args:
-            sigma (float): The standard deviation of the Gaussian distribution.
-                Determines the width of the Gaussian curve.
-            device (Union[str, torch.device]): Specifies the device where the tensor
-                will be created. Default is 'cpu'.
-            dtype: Specifies the data type of the resulting tensor. Default is
-                torch.float32.
-
-        Returns:
-            Tensor: A tensor representing the 1D Gaussian kernel.
-    """
-    kernel_size = int(2 * (3.0 * sigma) + 1)  # Approximate kernel size
-    if kernel_size % 2 == 0:
-        kernel_size += 1  # Ensure odd size
-
-    coords = torch.arange(kernel_size, dtype=dtype, device=device) - kernel_size // 2
-    g = torch.exp(-0.5 * (coords / sigma) ** 2)
-    g /= g.sum()
-    return g
-
-
-def filter_separable(tensor: torch.Tensor, kernel: torch.Tensor) -> torch.Tensor:
-    """Applies a 3D Gaussian filter using three separable 1D convolutions."""
-    assert tensor.ndim == 3, "Input tensor must be 3D"
-    assert tensor.device == kernel.device, "Input and kernel must be on the same device"
-    assert kernel.ndim == 1, "Kernel must be 1D"
-
-    k1d = kernel.view(1, 1, -1).to(tensor.dtype)
-    for _ in range(3):
-        tensor = conv1d(tensor.reshape(-1, 1, tensor.size(2)), k1d, padding="same").view(*tensor.shape)
-        tensor = tensor.permute(2, 0, 1)
-    return tensor
-
-
-logger = logging.getLogger("Resample")
-
 def smooth_label_image(data: torch.Tensor, sigma: float) -> torch.Tensor:
+    """
+    Smooth a label image using a Gaussian kernel of size sigma.
+
+    This function applies Gaussian smoothing to a label image tensor and assigns each label the
+    maximum probability using a Gaussian Kernel. It processes each unique label separately, applies
+    3D FFT-based Gaussian smoothing, and updates the resulting tensor with the labels based on
+    maximum probability.
+
+    Args:
+        data: A tensor containing the label image to be smoothed.
+        sigma: Standard deviation for the Gaussian kernel used for smoothing.
+
+    Returns:
+        torch.Tensor: A tensor representing the smoothed label image.
+    """
     labels = torch.unique(data)
-    # kernel = gaussian_kernel_1d(sigma, device=data.device, dtype=torch.float32)
     kernel_fft = gaussian_kernel_3d_fft(data.shape, sigma, device=data.device)
     max_probabilities = torch.zeros_like(data, dtype=torch.float32)
-    # kern = torch.randn(data.shape, device=data.device, dtype=torch.float32)
     result = torch.zeros_like(data)
-    tqd = tqdm.tqdm(labels, desc="Processing labels")
-    print(labels)
+    logger.info(f"Smoothing {len(labels)} labels")
+    tqd = tqdm.tqdm(labels, desc="Smoothing label")
     for label in tqd:
+        tqd.set_postfix({"label": label})
         filtered = torch.fft.ifftn(torch.fft.fftn((data == label).float()) * kernel_fft).real
         mask2 = filtered > max_probabilities
         result[mask2] = label
@@ -138,7 +132,9 @@ def resample_label_image(nifti: nib.Nifti1Image,
     header = nifti.header
     # noinspection PyUnresolvedReferences
     header.set_zooms(resolution_out)
+    # noinspection PyTypeChecker
     return nib.Nifti1Image(data_resampled.numpy(force=True).astype(np.uint16), nifti.affine, header)
+
 
 def do_resample(nifti: nib.Nifti1Image, resolution_out: np.ndarray) -> torch.Tensor:
     header = nifti.header
@@ -226,33 +222,11 @@ def main():
     output_file = os.path.join(output_dir, file_base)
     nib.save(result, output_file)
 
+
 def select_labels(img: nib.Nifti1Image, labels: List[int]) -> nib.Nifti1Image:
-    data = img.get_fdata()
+    data = img.get_fdata().astype(np.uint16)
     new_data = np.zeros_like(data, dtype=np.uint16)
     for label in labels:
         new_data[data == label] = label
+    # noinspection PyTypeChecker
     return nib.Nifti1Image(new_data, img.affine, img.header)
-
-def test_filter():
-    device = "cpu"
-    img_file = "/Users/pscheibe/PycharmProjects/SynthSeg/data/training_label_maps/training_seg_01.nii.gz"
-    img = nib.load(img_file)
-    data = torch.from_numpy(img.get_fdata()).to(device=device, dtype=torch.float32)
-    kernel = gaussian_kernel_1d(4.0).to(device=device)
-    data_filtered = filter_separable(data, kernel)
-    nib.save(nib.Nifti1Image(data_filtered, img.affine, img.header), "/Users/pscheibe/tmp/test.nii.gz")
-
-
-if __name__ == '__main__':
-    torch.set_num_threads(256)
-    img_file = "/Users/pscheibe/PycharmProjects/SynthSeg/data/training_label_maps/training_seg_05.nii.gz"
-    for sigma in [None, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]:
-    # for sigma in [6.0, 7.0]:
-        img = nib.load(img_file)
-        img_out = resample_label_image(img, [0.4, 0.4, 0.4], sigma=sigma)
-        img_selected = select_labels(img_out, [41, 2])
-        nib.save(img_selected, f"/Users/pscheibe/tmp/test_{sigma}.nii.gz")
-    # img_out = resample_label_image(img, [0.5, 0.5, 0.5], sigma=None)
-    # nib.save(img_out, "/Users/pscheibe/tmp/test_None.nii.gz")
-
-
