@@ -1,5 +1,5 @@
 [project]
-name = "Brain Segmentation"
+name = "BrainSegmentation"
 version = "2025.0.0"
 description = "Provides functionality to prepare training data and train models for MRI brain segmentation"
 readme = "README.md"
