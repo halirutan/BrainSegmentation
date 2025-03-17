@@ -1,7 +1,5 @@
-# File: tests/test_scale_label_image.py
-
 import pytest
-from src.brainseg.scale_label_image import gaussian_kernel_3d_fft, filter_fft
+from brainseg.scale_label_image import gaussian_kernel_3d_fft, filter_fft
 
 import unittest
 import torch

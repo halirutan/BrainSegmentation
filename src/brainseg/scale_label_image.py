@@ -108,19 +108,20 @@ def smooth_label_image(data: torch.Tensor, sigma: float) -> torch.Tensor:
 
 def resample_label_image(nifti: nib.Nifti1Image,
                          resolution_out: Union[float, List[float]],
-                         sigma: Optional[float] = None) -> nib.Nifti1Image:
+                         sigma: Optional[float] = None,
+                         device: str | torch.device = "cpu") -> nib.Nifti1Image:
     """
     Resample a label image to a new resolution.
     Note: This is intended for internal use only to upsample label images that are in a too low resolution.
 
     Args:
-        nifti: The input label image represented as a nib.Nifti1Image object.
+        nifti: The input label-image represented as a nib.Nifti1Image object.
         resolution_out: The desired output resolution. It can be a single float value or a list of three float values
             representing the desired voxel size in mm in x, y, and z directions respectively.
         sigma: If not None, it must be a float value specifying the standard deviation of the Gaussian kernel to be
             used for smoothing the label image.
     Returns:
-        The resampled label image represented as a nib.Nifti1Image object.
+        The resampled label-image represented as a nib.Nifti1Image object.
     """
     if type(resolution_out) is float:
         resolution_out = np.array([resolution_out] * 3)
@@ -136,14 +137,16 @@ def resample_label_image(nifti: nib.Nifti1Image,
     return nib.Nifti1Image(data_resampled.numpy(force=True).astype(np.uint16), nifti.affine, header)
 
 
-def do_resample(nifti: nib.Nifti1Image, resolution_out: np.ndarray) -> torch.Tensor:
+def do_resample(
+        nifti: nib.Nifti1Image,
+        resolution_out: np.ndarray,
+        device: str | torch.device = "cpu") -> torch.Tensor:
     header = nifti.header
     # noinspection PyUnresolvedReferences
     dim: tuple[int, int, int] = header.get_data_shape()
     if len(dim) != 3:
         raise RuntimeError("Image data does not have 3 dimensions")
 
-    device = "mps"
     # noinspection PyUnresolvedReferences
     resolution_in = header["pixdim"][1:4]
     step_size: np.ndarray[np.float32] = resolution_out / resolution_in
@@ -152,15 +155,12 @@ def do_resample(nifti: nib.Nifti1Image, resolution_out: np.ndarray) -> torch.Ten
     xs = torch.arange(0, dim[2], step_size[2]).to(dtype=torch.int, device=device)
     numpy_data = nifti.get_fdata()
     torch_data = torch.tensor(numpy_data, dtype=torch.int, device=device)
-    start = time.time()
     data_resampled = torch_data[torch.meshgrid(zs, ys, xs, indexing="ij")]
-    end = time.time()
-    print(f"Resampling took {end - start} seconds")
     return data_resampled
 
 
 @dataclass
-class Options:
+class RescaleLabelImageData:
     image_file: str
     """Input label image for rescaling."""
 
@@ -177,16 +177,13 @@ class Options:
     sigma: Optional[float] = None
     """If not None, it must be a float value specifying the standard deviation of the Gaussian kernel to be used for smoothing the label image."""
 
-    crop_size: int = None
-    """If not None, it must be an int or a list of integers specifying the output size."""
-
 
 def main():
     parser = ArgumentParser()
     # noinspection PyTypeChecker
-    parser.add_arguments(Options, "general")
+    parser.add_arguments(RescaleLabelImageData, "general")
     args = parser.parse_args()
-    options: Options = args.general
+    options: RescaleLabelImageData = args.general
 
     if isinstance(options.output_dir, str) and os.path.isdir(options.output_dir):
         logger.debug(f"Using output directory: '{options.output_dir}'")
@@ -201,7 +198,6 @@ def main():
         exit(1)
 
     resolution = options.resolution
-    crop_size = options.crop_size
     output_dir = options.output_dir
 
     image_file = options.image_file
@@ -210,10 +206,7 @@ def main():
         logger.error(f"Image {image_file} is not a Nifti1 image")
         exit(1)
 
-    if crop_size is not None:
-        result = resample_label_image_cropped(nifti, resolution, crop_size)
-    else:
-        result = resample_label_image(nifti, resolution)
+    result = resample_label_image(nifti, resolution)
 
     if not isinstance(result, nib.Nifti1Image):
         logger.error("Unable to rescale image.")
