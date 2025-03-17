@@ -1,8 +1,8 @@
-FullHead Segmentation Pipeline Documentation
+## FullHead Segmentation Pipeline Documentation
 
 This document provides a detailed overview of the FullHead segmentation pipeline, combining SynthSeg and CHARM segmentations from brain MRI datasets to create consistent overlay segmentation maps.
 
-Overview
+# Overview
 
 The pipeline integrates two advanced segmentation methods:
 
@@ -12,9 +12,9 @@ CHARM (SimNIBS): A segmentation tool primarily used for head modeling in neurost
 
 The combination ensures precise and consistent segmentation, suitable for generating training data or subsequent analyses.
 
-Usage
+## Usage
 
-Prerequisites
+# Prerequisites
 
 Ensure the following software and environments are set up:
 
@@ -32,13 +32,13 @@ Path to SynthSeg_predict.py script
 
 Path to SynthSeg directory
 
-Running the Pipeline
+# Running the Pipeline
 
 The pipeline is executed via command line:
 
 python create_fh_seg.py <input_dir> <output_dir> <synthseg_script> <synthseg_dir>
 
-Arguments:
+# Arguments:
 
 <input_dir>: Directory containing input NIfTI files (.nii or .nii.gz).
 
@@ -48,7 +48,7 @@ Arguments:
 
 <synthseg_dir>: Absolute path to the SynthSeg root directory.
 
-Example
+# Example
 
 python create_fh_seg.py \
     /data/your_project/input_niftis \
@@ -56,7 +56,7 @@ python create_fh_seg.py \
     /path/to/SynthSeg/scripts/commands/SynthSeg_predict.py \
     /path/to/SynthSeg
 
-Output
+# Output
 
 The pipeline performs the following steps:
 
@@ -70,12 +70,12 @@ Overlay creation: Combines both segmentations into a unified segmentation map, p
 
 Label consistency verification: Ensures all generated overlays share identical sets of segmentation labels.
 
-Output Files
+# Output Files
 
 Output overlays are stored with filenames structured as:
 
 <basename_of_input_file>_overlay.nii.gz
 
-Label Consistency Check
+#Label Consistency Check
 
 The pipeline automatically verifies label consistency across all generated segmentation overlays. If any discrepancies occur, the process halts and clearly identifies the inconsistent files.
