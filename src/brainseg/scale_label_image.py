@@ -13,10 +13,11 @@ import tqdm
 
 logger = logging.getLogger("Resample")
 
+
 def gaussian_kernel_3d_fft(
         shape: tuple[int, int, int] | torch.Size,
         sigma: float,
-        device: str | torch.device='cpu') -> torch.Tensor:
+        device: str | torch.device = 'cpu') -> torch.Tensor:
     """
         Generates a 3D Gaussian kernel in the frequency domain using FFT.
 
@@ -74,6 +75,7 @@ def filter_fft(tensor: torch.Tensor, sigma: float) -> torch.Tensor:
     filtered_fft = tensor_fft * kernel_fft
     filtered = torch.fft.ifftn(filtered_fft).real
     return filtered
+
 
 def smooth_label_image(data: torch.Tensor, sigma: float) -> torch.Tensor:
     """
@@ -160,7 +162,15 @@ def do_resample(
 
 
 @dataclass
-class RescaleLabelImageData:
+class Options:
+    """
+    This program resamples a label image to a specified resolution using the NIfTI format.
+    It supports optional Gaussian smoothing during the rescaling process.
+    The user can provide input parameters, including the image file, output directory, desired resolution (in mm),
+    and an optional smoothing sigma.
+    The rescaled image is saved in the specified output directory.
+    """
+
     image_file: str
     """Input label image for rescaling."""
 
@@ -181,9 +191,9 @@ class RescaleLabelImageData:
 def main():
     parser = ArgumentParser()
     # noinspection PyTypeChecker
-    parser.add_arguments(RescaleLabelImageData, "general")
+    parser.add_arguments(Options, "options")
     args = parser.parse_args()
-    options: RescaleLabelImageData = args.general
+    options: Options = args.options
 
     if isinstance(options.output_dir, str) and os.path.isdir(options.output_dir):
         logger.debug(f"Using output directory: '{options.output_dir}'")
@@ -214,12 +224,3 @@ def main():
     file_base = os.path.basename(image_file)
     output_file = os.path.join(output_dir, file_base)
     nib.save(result, output_file)
-
-
-def select_labels(img: nib.Nifti1Image, labels: List[int]) -> nib.Nifti1Image:
-    data = img.get_fdata().astype(np.uint16)
-    new_data = np.zeros_like(data, dtype=np.uint16)
-    for label in labels:
-        new_data[data == label] = label
-    # noinspection PyTypeChecker
-    return nib.Nifti1Image(new_data, img.affine, img.header)
