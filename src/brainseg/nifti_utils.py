@@ -3,6 +3,9 @@ import numpy as np
 import nibabel as nib
 from typing import Optional, Tuple
 
+from nibabel import Nifti1Image
+
+
 def quick_save_nifti_from_torch(
     tensor: torch.Tensor,
     output_path: str,
@@ -78,3 +81,19 @@ def _create_affine_for_unit_fov(shape: Tuple[int, int, int]) -> np.ndarray:
     affine[3, 3] = 1.0
     
     return affine
+
+def is_label_image(img: Nifti1Image) -> bool:
+    """
+     Determine if the given image is a labeled image.
+
+     A labeled image is typically represented with an integer data type, which
+     corresponds to discrete labels for different regions or objects within the
+     image.
+
+     Args:
+         img (Nifti1Image): An image object of type `Nifti1Image` to check.
+
+     Returns:
+         bool: True if the image is a labeled image (i.e., its data type is an integer), False otherwise.
+     """
+    return np.issubdtype(img.get_data_dtype(), np.integer)
