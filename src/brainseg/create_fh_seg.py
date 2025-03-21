@@ -1,34 +1,39 @@
 import os
-import sys
 import subprocess
 import nibabel as nib
 import numpy as np
 import scipy.ndimage
 import shutil
+from simple_parsing import ArgumentParser
+from dataclasses import dataclass
+
+@dataclass
+class CLIOptions:
+    input_dir: str
+    output_dir: str
+    synthseg_script: str
+    synthseg_dir: str
+    synthseg_env: str
+    charm_env: str
 
 def run_synthseg(conda_env, input_nifti, output_nifti, synthseg_script, synthseg_dir):
-    python_bin = os.path.join(conda_env, "bin", "python")
-    env = os.environ.copy()
-    env["PYTHONPATH"] = synthseg_dir
-
-    subprocess.run(
-        [python_bin, synthseg_script, "--i", input_nifti, "--o", output_nifti, "--robust"],
-        check=True, cwd=synthseg_dir, env=env
-    )
+    command = f"source $(conda info --base)/etc/profile.d/conda.sh && conda activate {conda_env} && python {synthseg_script} --i {input_nifti} --o {output_nifti} --robust"
+    subprocess.run(command, shell=True, check=True, executable="/bin/bash", cwd=synthseg_dir)
 
 def run_charm(conda_env, subject_id, input_nifti, charm_working_dir):
-    charm_bin = os.path.join(conda_env, "bin", "charm")
-    subject_dir = os.path.join(charm_working_dir, f"m2m_{subject_id}")
-
     os.makedirs(charm_working_dir, exist_ok=True)
+    subject_dir = os.path.join(charm_working_dir, f"m2m_{subject_id}")
 
     if os.path.exists(subject_dir):
         shutil.rmtree(subject_dir)
 
-    subprocess.run(
-        [charm_bin, subject_id, input_nifti, "--forcesform", "--forcerun"],
-        check=True, cwd=charm_working_dir
+    command = (
+        f"source $(conda info --base)/etc/profile.d/conda.sh && "
+        f"conda activate {conda_env} && "
+        f"charm {subject_id} {input_nifti} --forcesform --forcerun"
     )
+
+    subprocess.run(command, shell=True, check=True, executable="/bin/bash", cwd=charm_working_dir)
 
 def isolate_labels(nifti_path, labels, output_nifti):
     img = nib.load(nifti_path)
@@ -52,14 +57,14 @@ def verify_label_consistency_across_overlays(overlay_paths):
 
     print("Label consistency across all overlays successfully verified.")
 
-def main(input_dir, output_dir, synthseg_script, synthseg_dir, synthseg_env, charm_env):
+def main(opts: CLIOptions):
     charm_labels = [501, 502, 506, 507, 508, 509, 511, 512, 514, 515, 516, 517, 520, 530]
 
-    nifti_files = []
-    for root, _, files in os.walk(input_dir):
-        for file in files:
-            if file.endswith('.nii') or file.endswith('.nii.gz'):
-                nifti_files.append(os.path.join(root, file))
+    nifti_files = [
+        os.path.join(root, file)
+        for root, _, files in os.walk(opts.input_dir)
+        for file in files if file.endswith(('.nii', '.nii.gz'))
+    ]
 
     print(f"Found NIfTI files: {len(nifti_files)}")
 
@@ -69,14 +74,14 @@ def main(input_dir, output_dir, synthseg_script, synthseg_dir, synthseg_env, cha
         base_name = os.path.basename(nifti_file).replace('.nii.gz', '').replace('.nii', '')
         print(f"Processing {base_name}")
 
-        synthseg_output = os.path.join(output_dir, f"{base_name}_synthseg.nii.gz")
-        charm_working_dir = os.path.join(output_dir, f"{base_name}_charm")
-        charm_filtered_path = os.path.join(output_dir, f"{base_name}_charm_filtered.nii.gz")
-        resampled_synthseg_output = os.path.join(output_dir, f"{base_name}_synthseg_resampled.nii.gz")
-        final_overlay = os.path.join(output_dir, f"{base_name}_overlay.nii.gz")
+        synthseg_output = os.path.join(opts.output_dir, f"{base_name}_synthseg.nii.gz")
+        charm_working_dir = os.path.join(opts.output_dir, f"{base_name}_charm")
+        charm_filtered_path = os.path.join(opts.output_dir, f"{base_name}_charm_filtered.nii.gz")
+        resampled_synthseg_output = os.path.join(opts.output_dir, f"{base_name}_synthseg_resampled.nii.gz")
+        final_overlay = os.path.join(opts.output_dir, f"{base_name}_overlay.nii.gz")
 
-        run_charm(charm_env, base_name, nifti_file, charm_working_dir)
-        run_synthseg(synthseg_env, nifti_file, synthseg_output, synthseg_script, synthseg_dir)
+        run_charm(opts.charm_env, base_name, nifti_file, charm_working_dir)
+        run_synthseg(opts.synthseg_env, nifti_file, synthseg_output, opts.synthseg_script, opts.synthseg_dir)
 
         isolate_labels(
             os.path.join(charm_working_dir, f"m2m_{base_name}", "segmentation", "labeling.nii.gz"),
@@ -105,17 +110,9 @@ def main(input_dir, output_dir, synthseg_script, synthseg_dir, synthseg_env, cha
         print("Only one overlay generated; consistency check not required.")
 
 if __name__ == "__main__":
-    if len(sys.argv) != 7:
-        print("Usage: python create_fh_seg.py <input_dir> <output_dir> <synthseg_script> <synthseg_dir> <synthseg_env> <charm_env>")
-        sys.exit(1)
+    parser = ArgumentParser()
+    parser.add_arguments(CLIOptions, dest="opts")
+    args = parser.parse_args()
 
-    input_dir = sys.argv[1]
-    output_dir = sys.argv[2]
-    synthseg_script = sys.argv[3]
-    synthseg_dir = sys.argv[4]
-    synthseg_env = sys.argv[5]
-    charm_env = sys.argv[6]
-
-    os.makedirs(output_dir, exist_ok=True)
-
-    main(input_dir, output_dir, synthseg_script, synthseg_dir, synthseg_env, charm_env)
+    os.makedirs(args.opts.output_dir, exist_ok=True)
+    main(args.opts)
