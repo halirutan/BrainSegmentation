@@ -40,21 +40,35 @@ python create_fh_seg.py <input_dir> <output_dir> <synthseg_script> <synthseg_dir
 
 # Arguments:
 
-<input_dir>: Directory containing input NIfTI files (.nii or .nii.gz).
 
-<output_dir>: Directory where the segmentation overlays will be stored.
+- `--input_dir`:  
+  Path to the directory containing input NIfTI files (`.nii` or `.nii.gz`).
 
-<synthseg_script>: Absolute path to SynthSeg_predict.py.
+- `--output_dir`:  
+  Path to the directory where the generated segmentation overlays will be saved.
 
-<synthseg_dir>: Absolute path to the SynthSeg root directory.
+- `--synthseg_script`:  
+  Absolute path to the `SynthSeg_predict.py` script.
+
+- `--synthseg_dir`:  
+  Absolute path to the SynthSeg root directory.
+
+- `--synthseg_env`:  
+  Name of the conda environment used for running SynthSeg.
+
+- `--charm_env`:  
+  Name of the conda environment used for running CHARM (SimNIBS).
 
 # Example
 
 python create_fh_seg.py \
-    /data/your_project/input_niftis \
-    /data/your_project/output_overlays \
-    /path/to/SynthSeg/scripts/commands/SynthSeg_predict.py \
-    /path/to/SynthSeg
+  --input_dir /path/to/input_dir \
+  --output_dir /path/to/output_dir \
+  --synthseg_script /path/to/SynthSeg_predict.py \
+  --synthseg_dir /path/to/SynthSeg \
+  --synthseg_env synth_seg_orig_py38 \
+  --charm_env simnibs_env
+
 
 # Output
 
@@ -76,6 +90,6 @@ Output overlays are stored with filenames structured as:
 
 <basename_of_input_file>_overlay.nii.gz
 
-#Label Consistency Check
+# Label Consistency Check
 
 The pipeline automatically verifies label consistency across all generated segmentation overlays. If any discrepancies occur, the process halts and clearly identifies the inconsistent files.
