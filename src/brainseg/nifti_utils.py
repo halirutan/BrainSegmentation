@@ -1,9 +1,15 @@
+"""
+This module provides utility functions for working with NIfTI images and PyTorch tensors, 
+focusing on easy saving and manipulation of medical imaging data in the NIfTI format.
+"""
+
+from typing import Optional, Tuple, List
+
 import torch
 import numpy as np
 import nibabel as nib
-from typing import Optional, Tuple, List
-
 from nibabel import Nifti1Image
+
 
 
 def quick_save_nifti_from_torch(
