@@ -39,7 +39,7 @@ class TestNiftiUtils(unittest.TestCase):
         self.assertAlmostEqual(affine[1, 1], 1.0 / self.shape[1])  # y voxel size
         self.assertAlmostEqual(affine[2, 2], 1.0 / self.shape[0])  # z voxel size
 
-        # Check last row
+        # Check the last row
         self.assertEqual(affine[3, 3], 1.0)
 
     def test_save_nifti_from_numpy(self):

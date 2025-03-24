@@ -1,5 +1,5 @@
 import pytest
-from brainseg.scale_label_image import gaussian_kernel_3d_fft, filter_fft
+from brainseg.scale_label_image import gaussian_kernel_3d_fft, gaussian_filter_fft
 
 import unittest
 import torch
@@ -53,7 +53,7 @@ class TestGaussianFilter(unittest.TestCase):
         impulse = torch.zeros(self.shape, device=self.device)
         impulse[self.shape[0] // 2, self.shape[1] // 2, self.shape[2] // 2] = 1.0
 
-        filtered = filter_fft(impulse, self.sigma)
+        filtered = gaussian_filter_fft(impulse, self.sigma)
 
         # Generate a 3D Gaussian kernel in the spatial domain
         coords = [torch.arange(s, device=self.device) - (s - 1) / 2 for s in self.shape]
@@ -72,7 +72,7 @@ class TestGaussianFilter(unittest.TestCase):
         """
         input_tensor = torch.randn(self.shape, device=self.device)
         input_energy = torch.sum(input_tensor**2).item()
-        filtered = filter_fft(input_tensor, self.sigma)
+        filtered = gaussian_filter_fft(input_tensor, self.sigma)
         output_energy = torch.sum(filtered**2).item()
         self.assertAlmostEqual(input_energy/output_energy, 1.0, delta=1e-2)
 
@@ -84,10 +84,10 @@ class TestGaussianFilter(unittest.TestCase):
         a = torch.randn(self.shape, device=self.device)
         b = torch.randn(self.shape, device=self.device)
 
-        filtered_sum = filter_fft(a + b, self.sigma)
+        filtered_sum = gaussian_filter_fft(a + b, self.sigma)
 
-        filtered_A = filter_fft(a, self.sigma)
-        filtered_B = filter_fft(b, self.sigma)
+        filtered_A = gaussian_filter_fft(a, self.sigma)
+        filtered_B = gaussian_filter_fft(b, self.sigma)
         sum_filtered = filtered_A + filtered_B
 
         self.assertTrue(torch.allclose(filtered_sum, sum_filtered, atol=1e-4))
@@ -101,8 +101,8 @@ class TestGaussianFilter(unittest.TestCase):
         shift = 5
         shifted_tensor = torch.roll(input_tensor, shifts=shift, dims=2)
 
-        filtered_original = filter_fft(input_tensor, self.sigma)
-        filtered_shifted = filter_fft(shifted_tensor, self.sigma)
+        filtered_original = gaussian_filter_fft(input_tensor, self.sigma)
+        filtered_shifted = gaussian_filter_fft(shifted_tensor, self.sigma)
 
         rolled_filtered = torch.roll(filtered_original, shifts=shift, dims=2)
         self.assertTrue(torch.allclose(filtered_shifted, rolled_filtered, atol=1e-4))

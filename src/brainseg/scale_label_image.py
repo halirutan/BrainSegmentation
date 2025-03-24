@@ -49,11 +49,12 @@ def gaussian_kernel_3d_fft(
     y = torch.fft.fftfreq(ny, device=device).view(1, ny, 1)
     x = torch.fft.fftfreq(nx, device=device).view(1, 1, nx)
     squared_dist = x ** 2 + y ** 2 + z ** 2
-    kernel_fft = torch.exp(-2 * (torch.pi ** 2) * (sigma ** 2) * squared_dist / (nx * ny * nz))
+    kernel_fft = torch.exp(-squared_dist / (2 * sigma ** 2))
+    kernel_fft /= kernel_fft.sum()
     return kernel_fft
 
 
-def filter_fft(tensor: torch.Tensor, sigma: float) -> torch.Tensor:
+def gaussian_filter_fft(tensor: torch.Tensor, sigma: float) -> torch.Tensor:
     """
     Filters a 3D tensor using a Gaussian kernel in the frequency domain.
 
