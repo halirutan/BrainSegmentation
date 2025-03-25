@@ -48,9 +48,13 @@ def gaussian_kernel_3d_fft(
     z = torch.fft.fftfreq(nz, device=device).view(nz, 1, 1)
     y = torch.fft.fftfreq(ny, device=device).view(1, ny, 1)
     x = torch.fft.fftfreq(nx, device=device).view(1, 1, nx)
+    # covMatrix = {{\[Sigma]^2, 0, 0}, {0, \[Sigma]^2, 0}, {0, 0, \[Sigma]^2}};
+    # PDF[MultinormalDistribution[covMatrix], {x, y, z}]
+    # FullSimplify[%, \[Sigma] > 0]
+    # FourierTransform[%, {x, y, z}, {X, Y, Z}, FourierParameters -> {0, -2*Pi}]
+    # FullSimplify[%, \[Sigma] > 0]
     squared_dist = x ** 2 + y ** 2 + z ** 2
-    kernel_fft = torch.exp(-squared_dist / (2 * sigma ** 2))
-    kernel_fft /= kernel_fft.sum()
+    kernel_fft = torch.exp(-2.0 * torch.pi**2 * squared_dist * sigma ** 2)
     return kernel_fft
 
 
