@@ -16,6 +16,7 @@ dependencies:
   - mkdocs=1.6.1
   - mkdocstrings
   - mkdocstrings-python
+  - python-markdown-math
   - pip:
       - torch
       - torch_vision

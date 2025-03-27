@@ -22,7 +22,8 @@ markdown_extensions:
   - meta
   - toc:
       permalink: true
-
+  - pymdownx.arithmatex:
+      generic: true
 # Navigation structure
 nav:
   - Home: index.md
@@ -35,7 +36,8 @@ nav:
       - General Approach: training_data/overview.md
       - CHARM Segmentation: training_data/charm.md
       - SynthSeg Segmentation: training_data/synth_seg.md
-  - Automatic Code Documentation:
+      - Label Upscaling: training_data/upscaling.md
+  - API Documentation:
     - API Reference: api.md
 
 # Plugins
@@ -48,3 +50,7 @@ plugins:
           options:
             docstring_style: google
             show_source: true
+
+extra_javascript:
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
