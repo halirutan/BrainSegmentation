@@ -1,3 +1,5 @@
+import math
+
 import pytest
 from brainseg.scale_label_image import gaussian_kernel_3d_fft, gaussian_filter_fft
 
@@ -58,23 +60,29 @@ class TestGaussianFilter(unittest.TestCase):
         # Generate a 3D Gaussian kernel in the spatial domain
         coords = [torch.arange(s, device=self.device) - (s - 1) / 2 for s in self.shape]
         z, y, x = torch.meshgrid(*coords, indexing='ij')
-        squared_dist = x**2 + y**2 + z**2
-        gaussian = torch.exp(-squared_dist / (2 * self.sigma**2))
-        gaussian /= gaussian.sum()
+        squared_dist = x ** 2 + y ** 2 + z ** 2
 
-        # TODO: This is still wrong. Check impulse response.
-        # I suspect that voxels are just shifted by 1 but that needs to be verified.
-        self.assertTrue(torch.allclose(filtered, gaussian, atol=1))
+        # Below is the comparison of the filter with the analytical multi-normal distribution in 3 dimensions.
+        scaling = 1.0 / (2 * math.sqrt(2) * math.sqrt(torch.pi ** 3) * self.sigma ** 3)
+        gaussian = scaling * torch.exp(-squared_dist / (2 * self.sigma ** 2))
+        self.assertTrue(torch.allclose(filtered, gaussian, atol=1e-4))
 
-    def test_energy_preservation(self):
+        # The same is true if we just take a Gaussian function with an appropriate sigma and normalize it.
+        gaussian = torch.exp(-squared_dist / (2 * self.sigma ** 2))
+        gaussian /= torch.sum(gaussian)
+        self.assertTrue(torch.allclose(filtered, gaussian, atol=1e-4))
+
+
+    def test_energy_reduction(self):
         """
-        Energy Preservation Test: Confirm that the filter preserves the energy of the input signal.
+        Energy Reduction Test: Confirm that the filter reduces the energy of the input signal,
+        which a blurring filter should do.
         """
         input_tensor = torch.randn(self.shape, device=self.device)
         input_energy = torch.sum(input_tensor**2).item()
         filtered = gaussian_filter_fft(input_tensor, self.sigma)
         output_energy = torch.sum(filtered**2).item()
-        self.assertAlmostEqual(input_energy/output_energy, 1.0, delta=1e-2)
+        self.assertTrue(input_energy/output_energy > 300.0)
 
     def test_linearity(self):
         """

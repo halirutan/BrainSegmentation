@@ -30,6 +30,16 @@ def gaussian_kernel_3d_fft(
         The Gaussian kernel in the frequency domain is computed based on the squared Euclidean distance
         and the provided sigma.
 
+        The analytical formula for the Gaussian kernel in the frequency domain can be found using the following
+        Mathematica code for a multi-normal distribution and its Fourier transform::
+
+            covMatrix = {{sigma^2, 0, 0}, {0, sigma^2, 0}, {0, 0, sigma^2}};
+            distribution = PDF[MultinormalDistribution[covMatrix], {x, y, z}]
+            kernel = FullSimplify[distribution, sigma > 0]
+            Integrate[kernel, {x, -Infinity, Infinity}, {y, -Infinity, Infinity}, {z, -Infinity, Infinity},
+                Assumptions -> sigma > 0]
+            FourierTransform[kernel, {x, y, z}, {X, Y, Z}, FourierParameters -> {0, -2*Pi}]
+
         Args:
             shape: The shape of the 3D Gaussian kernel, defined as (nz, ny, nx), where nz, ny, and nx are the number of
                 elements along the z, y, and x dimensions respectively.
@@ -48,11 +58,6 @@ def gaussian_kernel_3d_fft(
     z = torch.fft.fftfreq(nz, device=device).view(nz, 1, 1)
     y = torch.fft.fftfreq(ny, device=device).view(1, ny, 1)
     x = torch.fft.fftfreq(nx, device=device).view(1, 1, nx)
-    # covMatrix = {{\[Sigma]^2, 0, 0}, {0, \[Sigma]^2, 0}, {0, 0, \[Sigma]^2}};
-    # PDF[MultinormalDistribution[covMatrix], {x, y, z}]
-    # FullSimplify[%, \[Sigma] > 0]
-    # FourierTransform[%, {x, y, z}, {X, Y, Z}, FourierParameters -> {0, -2*Pi}]
-    # FullSimplify[%, \[Sigma] > 0]
     squared_dist = x ** 2 + y ** 2 + z ** 2
     kernel_fft = torch.exp(-2.0 * torch.pi**2 * squared_dist * sigma ** 2)
     return kernel_fft
@@ -130,6 +135,7 @@ def resample_label_image(nifti: nib.Nifti1Image,
             representing the desired voxel size in mm in x, y, and z directions respectively.
         sigma: If not None, it must be a float value specifying the standard deviation of the Gaussian kernel to be
             used for smoothing the label image.
+        device: The device where computations are performed. Defaults to "cpu".
     Returns:
         The resampled label-image represented as a nib.Nifti1Image object.
     """
@@ -159,8 +165,7 @@ def do_resample(
         resolution_out (np.ndarray): The desired output resolution, given as a
             1D array containing three elements: (z-resolution, y-resolution,
             x-resolution).
-        device (str | torch.device): The device where computations are performed.
-            Defaults to "cpu".
+        device (str | torch.device): The device where computations are performed. Defaults to "cpu".
 
     Returns:
         torch.Tensor: Resampled image data as a PyTorch tensor.

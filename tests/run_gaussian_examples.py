@@ -7,7 +7,6 @@ from .utils import get_test_result_output_dir
 from brainseg.nifti_utils import quick_save_nifti_from_torch
 from brainseg.scale_label_image import gaussian_kernel_3d_fft
 
-# Configure logging to output all levels to console
 logger = logging.getLogger("gaussian_examples_test")
 
 
@@ -17,11 +16,10 @@ def calculate_energy(tensor: torch.Tensor) -> float:
 
 def test_impulse_response():
     """
-    Impulse Input Test: Verify that the filter correctly smooths a 3D impulse signal.
+    Simple test function used to debug the gaussian filter impulse response.
     """
-
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    shape = (16, 16, 16)
+    shape = (21, 21, 21)
     sigma = 2.0
 
     impulse = torch.zeros(shape, device=device)
@@ -35,33 +33,22 @@ def test_impulse_response():
     scaling = 1.0 / (2 * math.sqrt(2) * math.sqrt(torch.pi ** 3) * sigma ** 3)
     gaussian =  scaling * torch.exp(-squared_dist / (2 * sigma ** 2))
 
-    gaussian_fft = torch.fft.fftn(gaussian)
-    gaussian_fft_inv = torch.fft.ifftn(gaussian_fft)
-
-    # filtered_fft = impulse_fft * gaussian
-    # filtered = torch.fft.ifftn(filtered_fft)
-
     kernel_fft = gaussian_kernel_3d_fft(shape, sigma, device=device)
     filtered_fft = impulse_fft * kernel_fft
     filtered = torch.fft.ifftn(filtered_fft)
 
-
+    logger.info(f"Difference of filtered image and analytical solution:"
+                f" {torch.sum(torch.abs(filtered - gaussian)).item()}")
     logger.info(f"Impulse Sum: {impulse.sum().item()}")
     logger.info(f"Gaussian Sum: {gaussian.sum().item()}")
     logger.info(f"Gaussian Energy: {calculate_energy(gaussian)}")
-    logger.info(f"Gaussian FFT Energy: {calculate_energy(gaussian_fft)}")
-    logger.info(f"Gaussian FFT Inv Energy: {calculate_energy(gaussian_fft_inv)}")
     logger.info(f"Kernel FFT Energy: {calculate_energy(kernel_fft)}")
     logger.info(f"Kernel FFT Inv Energy: {calculate_energy(torch.fft.ifftn(kernel_fft))}")
     logger.info(f"Filtered Energy: {calculate_energy(filtered)}")
     logger.info(f"Filtered Sum: {filtered.real.sum().item()}")
 
     output_dir = get_test_result_output_dir("gaussian_impulse")
-    quick_save_nifti_from_torch(torch.log1p(gaussian_fft.abs()), os.path.join(output_dir, "gaussian_fft.nii"))
-    quick_save_nifti_from_torch(gaussian_fft.imag, os.path.join(output_dir, "gaussian_fft_imag.nii"))
-    quick_save_nifti_from_torch(gaussian_fft_inv.real, os.path.join(output_dir, "gaussian_fft_inv.nii"))
     quick_save_nifti_from_torch(gaussian.real, os.path.join(output_dir, "gaussian.nii"))
-    # quick_save_nifti_from_torch(torch.log1p(kernel_fft.abs()), os.path.join(output_dir, "kernel_fft.nii"))
     quick_save_nifti_from_torch(torch.fft.ifftn(kernel_fft).real, os.path.join(output_dir, "kernel.nii"))
     quick_save_nifti_from_torch(impulse_fft.abs(), os.path.join(output_dir, "impulse_fft.nii"))
     quick_save_nifti_from_torch(impulse_fft.imag, os.path.join(output_dir, "impulse_fft_imag.nii"))
