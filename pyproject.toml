@@ -6,6 +6,7 @@ readme = "README.md"
 license = { text = "GPL-3.0-or-later" }
 authors = [
     { name = "Patrick Scheibe", email = "patrick@halirutan.de" },
+    { name = "Juliette-Michelle Burkhardt", email = "burkhardtj@cbs.mpg.de"}
 ]
 requires-python = ">=3.11"
 dynamic = ["dependencies"]
@@ -35,3 +36,4 @@ torch_vision = "0.1.6.dev0"
 
 [project.scripts]
 scale_label_image = "brainseg.scale_label_image:main"
+full_head_segmentation = "brainseg.create_fh_seg:main"
