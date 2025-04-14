@@ -39,7 +39,13 @@ Ensure the following software and environments are set up:
 Execute the pipeline via the command line:
 
 ```shell
-python create_fh_seg.py <input_dir> <output_dir> <synthseg_script> <synthseg_dir>
+python create_fh_seg.py \
+  --input_dir <input_dir> \
+  --output_dir <output_dir> \
+  --synthseg_script <synthseg_script> \
+  --synthseg_dir <synthseg_dir> \
+  --synthseg_env <synthseg_env> \
+  --charm_env <charm_env>
 ```
 
 ### Arguments:
@@ -82,21 +88,30 @@ The pipeline performs the following sequential steps:
 
 1. **SynthSeg Segmentation:** Automatically segments brain structures robustly from the input MRI.
 2. **CHARM Segmentation:** Performs head model segmentation, including specific anatomical labels.
-3. **Label Isolation and Resampling:** SynthSeg segmentation is resampled to match the CHARM segmentation resolution.
-4. **Overlay Creation:** Combines both segmentations into a unified segmentation map, prioritizing SynthSeg labels.
+3. **Label Isolation and Resampling:** Specific CHARM labels (501, 502, 506, 507, 508, 509, 511, 512, 514, 515, 516, 517, 520, 530) are isolated, and SynthSeg segmentation is resampled to match the CHARM segmentation resolution.
+4. **Overlay Creation:** Combines both segmentations into a unified segmentation map, with SynthSeg labels taking precedence over CHARM labels where they overlap (SynthSeg labels are used wherever they exist, and CHARM labels are used only in areas where SynthSeg does not provide a label).
 5. **Label Consistency Verification:** Ensures all generated overlays share identical sets of segmentation labels.
 
 ---
 
 ## Output Files
 
-Output overlays are stored with filenames structured as:
+### Final Output
+The main output overlays are stored with filenames structured as:
 
 ```shell
 <basename_of_input_file>_overlay.nii.gz
 ```
 
-# Label Consistency Check
+### Intermediate Files
+The pipeline also generates several intermediate files during processing:
+
+- `<basename_of_input_file>_synthseg.nii.gz`: SynthSeg segmentation output
+- `<basename_of_input_file>_charm/`: Directory containing CHARM segmentation results
+- `<basename_of_input_file>_charm_filtered.nii.gz`: CHARM segmentation with isolated labels
+- `<basename_of_input_file>_synthseg_resampled.nii.gz`: SynthSeg segmentation resampled to match CHARM resolution
+
+## Label Consistency Check
 
 The pipeline automatically verifies label consistency across all generated segmentation overlays.
 If discrepancies are found, the process halts and explicitly identifies the inconsistent files.
