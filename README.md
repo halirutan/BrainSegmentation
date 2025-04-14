@@ -1,3 +1,5 @@
+[![Unit Tests](https://github.com/halirutan/BrainSegmentation/actions/workflows/pytest.yml/badge.svg)](https://github.com/halirutan/BrainSegmentation/actions/workflows/pytest.yml)
+
 # BrainSegmentation
 
 Project repository for tasks around brain segmentation.
