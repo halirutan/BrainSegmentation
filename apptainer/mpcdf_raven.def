@@ -4,7 +4,7 @@ From: nvidia/cuda:12.6.3-runtime-ubuntu24.04
 %post
 
 # Update system packages and install miniforge
-apt update && apt install -y wget git build-essential curl ca-certificates
+apt update && apt install -y wget git build-essential curl ca-certificates unzip
 
 wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh -O /tmp/miniforge.sh
 bash /tmp/miniforge.sh -b -p /opt/miniforge
@@ -29,11 +29,14 @@ mamba env create -f python_setup/environment.yml
 mamba create -f python_setup/SynthSeg/environment.yml
 conda activate synth_seg_orig_py38
 pip install -r python_setup/SynthSeg/requirements.txt
-
-# clone and install original SynthSeg
-git clone --depth=1 https://github.com/BBillot/SynthSeg.git /opt/SynthSeg
-pip install --no-deps -e /opt/SynthSeg
 conda deactivate
+
+# Clone original SynthSeg repository and download the model weights needed to run SynthSeg
+# Note that we don't actually need to install SynthSeg. With the activated environment, we can
+# run the prediction scripts right from the cloned repository.
+git clone --depth=1 https://github.com/BBillot/SynthSeg.git /opt/SynthSeg
+wget -O /tmp/models.zip https://datashare.mpcdf.mpg.de/s/EIO3hPidQiLXReN/download
+unzip /tmp/models.zip -d /opt/SynthSeg/models/
 
 # Environment 3: simnibs_env aka CHARM segmentation
 git clone --depth 1 https://github.com/simnibs/simnibs.git --branch v4.5.0 /opt/simnibs
