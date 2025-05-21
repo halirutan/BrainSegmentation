@@ -1,0 +1,63 @@
+Bootstrap: docker
+From: nvidia/cuda:12.6.3-runtime-ubuntu24.04
+
+%post
+
+# Update system packages and install miniforge
+apt update && apt install -y wget git build-essential curl ca-certificates
+
+wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh -O /tmp/miniforge.sh
+bash /tmp/miniforge.sh -b -p /opt/miniforge
+export PATH="/opt/miniforge/bin:$PATH"
+rm /tmp/miniforge.sh
+. /opt/miniforge/etc/profile.d/conda.sh
+. /opt/miniforge/etc/profile.d/mamba.sh
+conda update -n base -c conda-forge conda -y
+
+# First we clone our BrainSegmentation repository which contains conda environment
+# definition files for our own code, for SynthSeg and for CHARM.
+git clone https://github.com/halirutan/BrainSegmentation.git /opt/BrainSegmentation
+
+# Environment 1: BrainSegmentation
+cd /opt/BrainSegmentation
+mamba env create -f python_setup/environment.yml
+
+# Environment 2: Original SynthSeg
+# We create the environment with all its dependencies from package dependencies we have
+# stored in our BrainSegmentation repository. When this conda environment is set up, all
+# we have to do is to install SynthSeg without installing any dependencies.
+mamba create -f python_setup/SynthSeg/environment.yml
+conda activate synth_seg_orig_py38
+pip install -r python_setup/SynthSeg/requirements.txt
+
+# clone and install original SynthSeg
+git clone --depth=1 https://github.com/BBillot/SynthSeg.git /opt/SynthSeg
+pip install --no-deps -e /opt/SynthSeg
+conda deactivate
+
+# Environment 3: simnibs_env aka CHARM segmentation
+git clone --depth 1 https://github.com/simnibs/simnibs.git --branch v4.5.0 /opt/simnibs
+cd /opt/simnibs
+mamba env create -f environment_linux.yml
+conda activate simnibs_env
+pip install -e .
+python simnibs/cli/link_external_progs.py
+conda deactivate
+
+# Clean up all temporary stuff. That should reduce the size of the container.
+conda clean -afy
+apt-get clean
+rm -rf /var/lib/apt/lists/*
+
+%runscript
+#!/bin/bash
+source /opt/miniforge/etc/profile.d/conda.sh
+echo "Check available environments: conda env list"
+echo "Activate with: conda activate <env>"
+exec "$@"
+
+%labels
+Author Juliette-Michelle Burkhardt, Patrick Scheibe
+Version 1.0
+
+
