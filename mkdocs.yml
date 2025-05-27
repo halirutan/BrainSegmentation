@@ -17,6 +17,7 @@ theme:
 # Extensions
 markdown_extensions:
   - admonition
+  - pymdownx.details
   - codehilite
   - footnotes
   - meta
@@ -31,13 +32,16 @@ nav:
       - Overview: contribute/contributing.md
       - Writing Documentation: contribute/howto_write_docs.md
       - Writing Code: contribute/howto_write_code.md
+  - HPC Cluster:
+      - General Information: cluster/info.md
+      - Apptainer Build: cluster/apptainer.md
   - Creating Training Data:
       - General Approach: training_data/overview.md
       - CHARM Segmentation: training_data/charm.md
       - SynthSeg Segmentation: training_data/synth_seg.md
       - FullHeadSeg: training_data/FullHeadSeg.md
   - Automatic Code Documentation:
-    - API Reference: api.md
+      - API Reference: api.md
 
 # Plugins
 plugins:

@@ -52,12 +52,14 @@ conda clean -afy
 apt-get clean
 rm -rf /var/lib/apt/lists/*
 
+# Add activation commands to the container's environment script
+echo ". /opt/miniforge/etc/profile.d/conda.sh" >> $APPTAINER_ENVIRONMENT
+
 %runscript
 #!/bin/bash
-source /opt/miniforge/etc/profile.d/conda.sh
 echo "Check available environments: conda env list"
 echo "Activate with: conda activate <env>"
-exec "$@"
+exec /bin/bash "$@"
 
 %labels
 Author Juliette-Michelle Burkhardt, Patrick Scheibe
