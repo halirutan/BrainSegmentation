@@ -35,7 +35,12 @@ Ensure that the following software is present:
 
 ### Environment Installation
 
-The first step is to clone the latest release of the SimNIBS repository from GitHub:
+The first step is to clone the latest release of the SimNIBS repository from GitHub.
+
+!!! warning
+    When building an Apptainer, we recommend using the latest release of SimNIBS.
+    We had problems with version 4.5.0., which resulted in a compilation bug that could be traced back
+    to the wrong Boost library.
 
 ```shell
 git clone --depth 1 https://github.com/simnibs/simnibs.git --branch v4.5.0
@@ -50,7 +55,7 @@ source conda_path/etc/profile.d/mamba.sh
 
 mamba env create -f environment_linux.yml # we assume a Linux environment here!
 conda activate simnibs_env
-pip install -E .
+pip install -e .
 python simnibs/cli/link_external_progs.py
 
 # If you need fsleyes for viewing, uncomment the next line

@@ -5,6 +5,15 @@ We use the original implementation from [SynthSeg](https://github.com/BBillot/Sy
 the brain that is subsequently combined with the outer head segmentation of [CHARM](./charm.md) to create the final
 [full head segmentation](./FullHeadSeg.md)
 
+!!! warning "GPU acceleration"
+    Usually, we want to run SynthSeg on a GPU for maximum speed.
+    However, the original implementation relies on TensorFlow 2.2, which is quite old.
+    On NVIDIA GPUs with CUDA architecture 8.0 or newer, kernels are JIT-compiled from PTX and TensorFlow can take 
+    over 30 minutes to start up.
+    We found that running SynthSeg on multiple CPU cores instead of a single GPU is much faster and sufficient for
+    our purposes.
+    See SynthSeg options `--cpu` and `--threads` below for more details.
+    
 ## Building a Python Environment for SynthSeg
 
 The package dependency files for SynthSeg can be found in the `python_setup/SynthSeg` directory.
