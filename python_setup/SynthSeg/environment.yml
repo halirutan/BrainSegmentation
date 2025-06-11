@@ -1,0 +1,9 @@
+name: synth_seg_orig_py38
+channels:
+  - conda-forge
+  - nvidia
+dependencies:
+  - python==3.8
+  - cudatoolkit==10.1.*
+  - cuda-nvcc
+  - cudnn=7.6.*
