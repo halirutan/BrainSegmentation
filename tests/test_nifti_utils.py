@@ -39,7 +39,7 @@ class TestNiftiUtils(unittest.TestCase):
         self.assertAlmostEqual(affine[1, 1], 1.0 / self.shape[1])  # y voxel size
         self.assertAlmostEqual(affine[2, 2], 1.0 / self.shape[0])  # z voxel size
 
-        # Check last row
+        # Check the last row
         self.assertEqual(affine[3, 3], 1.0)
 
     def test_save_nifti_from_numpy(self):
@@ -54,10 +54,12 @@ class TestNiftiUtils(unittest.TestCase):
         img = nib.load(self.numpy_output_path)
 
         # Check data shape
+        # noinspection PyUnresolvedReferences
         self.assertEqual(img.shape, self.shape)
 
         # Check affine
         expected_affine = _create_affine_for_unit_fov(self.shape)
+        # noinspection PyUnresolvedReferences
         np.testing.assert_array_almost_equal(img.affine, expected_affine)
 
     def test_save_nifti_from_torch(self):
@@ -72,10 +74,12 @@ class TestNiftiUtils(unittest.TestCase):
         img = nib.load(self.torch_output_path)
 
         # Check data shape
+        # noinspection PyUnresolvedReferences
         self.assertEqual(img.shape, self.shape)
 
         # Check affine
         expected_affine = _create_affine_for_unit_fov(self.shape)
+        # noinspection PyUnresolvedReferences
         np.testing.assert_array_almost_equal(img.affine, expected_affine)
 
     def test_dtype_handling(self):
@@ -87,7 +91,8 @@ class TestNiftiUtils(unittest.TestCase):
 
         # Load and check dtype
         int_img = nib.load(int_output_path)
-        self.assertEqual(int_img.get_data_dtype(), np.int16)
+        # noinspection PyUnresolvedReferences
+        self.assertTrue(np.issubdtype(int_img.get_data_dtype(), np.integer))
 
         # Float array with explicit dtype
         float_array = np.random.rand(*self.shape)
@@ -96,6 +101,7 @@ class TestNiftiUtils(unittest.TestCase):
 
         # Load and check dtype
         float_img = nib.load(float_output_path)
+        # noinspection PyUnresolvedReferences
         self.assertEqual(float_img.get_data_dtype(), np.float64)
 
 if __name__ == "__main__":

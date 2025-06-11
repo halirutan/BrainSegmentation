@@ -1,22 +1,26 @@
-import time
+"""
+This module provides functionality for manipulating and resampling medical images in the NIfTI format
+using PyTorch and NumPy as primary computational backends.
+"""
+import sys
+from typing import Union, List, Optional
+from dataclasses import dataclass
+import os
+import logging
 
 import torch
 import nibabel as nib
 import numpy as np
-import os
-from typing import Union, List, Optional
-from dataclasses import dataclass
-
 from simple_parsing import ArgumentParser
-import logging
 import tqdm
 
 logger = logging.getLogger("Resample")
 
+
 def gaussian_kernel_3d_fft(
         shape: tuple[int, int, int] | torch.Size,
         sigma: float,
-        device: str | torch.device='cpu') -> torch.Tensor:
+        device: str | torch.device = 'cpu') -> torch.Tensor:
     """
         Generates a 3D Gaussian kernel in the frequency domain using FFT.
 
@@ -25,6 +29,16 @@ def gaussian_kernel_3d_fft(
         and the device where the computation should be performed.
         The Gaussian kernel in the frequency domain is computed based on the squared Euclidean distance
         and the provided sigma.
+
+        The analytical formula for the Gaussian kernel in the frequency domain can be found using the following
+        Mathematica code for a multi-normal distribution and its Fourier transform::
+
+            covMatrix = {{sigma^2, 0, 0}, {0, sigma^2, 0}, {0, 0, sigma^2}};
+            distribution = PDF[MultinormalDistribution[covMatrix], {x, y, z}]
+            kernel = FullSimplify[distribution, sigma > 0]
+            Integrate[kernel, {x, -Infinity, Infinity}, {y, -Infinity, Infinity}, {z, -Infinity, Infinity},
+                Assumptions -> sigma > 0]
+            FourierTransform[kernel, {x, y, z}, {X, Y, Z}, FourierParameters -> {0, -2*Pi}]
 
         Args:
             shape: The shape of the 3D Gaussian kernel, defined as (nz, ny, nx), where nz, ny, and nx are the number of
@@ -44,12 +58,12 @@ def gaussian_kernel_3d_fft(
     z = torch.fft.fftfreq(nz, device=device).view(nz, 1, 1)
     y = torch.fft.fftfreq(ny, device=device).view(1, ny, 1)
     x = torch.fft.fftfreq(nx, device=device).view(1, 1, nx)
-    squared_dist = (x ** 2 + y ** 2 + z ** 2)
-    kernel_fft = torch.exp(-2 * (torch.pi ** 2) * (sigma ** 2) * squared_dist / (nx * ny * nz))
+    squared_dist = x ** 2 + y ** 2 + z ** 2
+    kernel_fft = torch.exp(-2.0 * torch.pi**2 * squared_dist * sigma ** 2)
     return kernel_fft
 
 
-def filter_fft(tensor: torch.Tensor, sigma: float) -> torch.Tensor:
+def gaussian_filter_fft(tensor: torch.Tensor, sigma: float) -> torch.Tensor:
     """
     Filters a 3D tensor using a Gaussian kernel in the frequency domain.
 
@@ -74,6 +88,7 @@ def filter_fft(tensor: torch.Tensor, sigma: float) -> torch.Tensor:
     filtered_fft = tensor_fft * kernel_fft
     filtered = torch.fft.ifftn(filtered_fft).real
     return filtered
+
 
 def smooth_label_image(data: torch.Tensor, sigma: float) -> torch.Tensor:
     """
@@ -120,14 +135,15 @@ def resample_label_image(nifti: nib.Nifti1Image,
             representing the desired voxel size in mm in x, y, and z directions respectively.
         sigma: If not None, it must be a float value specifying the standard deviation of the Gaussian kernel to be
             used for smoothing the label image.
+        device: The device where computations are performed. Defaults to "cpu".
     Returns:
         The resampled label-image represented as a nib.Nifti1Image object.
     """
-    if type(resolution_out) is float:
+    if isinstance(resolution_out, float):
         resolution_out = np.array([resolution_out] * 3)
     else:
         resolution_out = np.array(resolution_out)
-    data_resampled = do_resample(nifti, resolution_out)
+    data_resampled = do_resample(nifti, resolution_out, device=device)
     if sigma is not None:
         data_resampled = smooth_label_image(data_resampled, sigma)
     header = nifti.header
@@ -141,6 +157,22 @@ def do_resample(
         nifti: nib.Nifti1Image,
         resolution_out: np.ndarray,
         device: str | torch.device = "cpu") -> torch.Tensor:
+    """
+    Resamples a 3D NIfTI image to the desired resolution using nearest neighbor interpolation.
+
+    Args:
+        nifti (nib.Nifti1Image): The input 3D NIfTI image to be resampled.
+        resolution_out (np.ndarray): The desired output resolution, given as a
+            1D array containing three elements: (z-resolution, y-resolution,
+            x-resolution).
+        device (str | torch.device): The device where computations are performed. Defaults to "cpu".
+
+    Returns:
+        torch.Tensor: Resampled image data as a PyTorch tensor.
+
+    Raises:
+        RuntimeError: If the input image does not have exactly 3 dimensions.
+    """
     header = nifti.header
     # noinspection PyUnresolvedReferences
     dim: tuple[int, int, int] = header.get_data_shape()
@@ -160,7 +192,15 @@ def do_resample(
 
 
 @dataclass
-class RescaleLabelImageData:
+class Options:
+    """
+    This program resamples a label image to a specified resolution using the NIfTI format.
+    It supports optional Gaussian smoothing during the rescaling process.
+    The user can provide input parameters, including the image file, output directory, desired resolution (in mm),
+    and an optional smoothing sigma.
+    The rescaled image is saved in the specified output directory.
+    """
+
     image_file: str
     """Input label image for rescaling."""
 
@@ -175,27 +215,33 @@ class RescaleLabelImageData:
     """
 
     sigma: Optional[float] = None
-    """If not None, it must be a float value specifying the standard deviation of the Gaussian kernel to be used for smoothing the label image."""
+    """
+    If not None, it must be a float value specifying the standard deviation of the Gaussian kernel
+    to be used for smoothing the label image.
+    """
 
 
 def main():
+    """
+    Main entry point for the program.
+    """
     parser = ArgumentParser()
     # noinspection PyTypeChecker
-    parser.add_arguments(RescaleLabelImageData, "general")
+    parser.add_arguments(Options, "options")
     args = parser.parse_args()
-    options: RescaleLabelImageData = args.general
+    options: Options = args.options
 
     if isinstance(options.output_dir, str) and os.path.isdir(options.output_dir):
         logger.debug(f"Using output directory: '{options.output_dir}'")
     else:
         logger.error(f"Output directory does not exist: '{options.output_dir}'")
-        exit(1)
+        sys.exit(1)
 
     if isinstance(options.image_file, str) and os.path.isfile(options.image_file):
         logger.debug(f"Using label image: '{options.image_file}'")
     else:
         logger.error(f"Provided image is not a regular file: '{options.image_file}'")
-        exit(1)
+        sys.exit(1)
 
     resolution = options.resolution
     output_dir = options.output_dir
@@ -204,7 +250,7 @@ def main():
     nifti = nib.load(image_file)
     if not isinstance(nifti, nib.Nifti1Image):
         logger.error(f"Image {image_file} is not a Nifti1 image")
-        exit(1)
+        sys.exit(1)
 
     result = resample_label_image(nifti, resolution)
 
@@ -214,12 +260,3 @@ def main():
     file_base = os.path.basename(image_file)
     output_file = os.path.join(output_dir, file_base)
     nib.save(result, output_file)
-
-
-def select_labels(img: nib.Nifti1Image, labels: List[int]) -> nib.Nifti1Image:
-    data = img.get_fdata().astype(np.uint16)
-    new_data = np.zeros_like(data, dtype=np.uint16)
-    for label in labels:
-        new_data[data == label] = label
-    # noinspection PyTypeChecker
-    return nib.Nifti1Image(new_data, img.affine, img.header)
