@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Brain Segmentation Team" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>API Reference - Brain Segmentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "API Reference";
+        var mkdocs_page_input_path = "api.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Brain Segmentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Contributing</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../contribute/contributing/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../contribute/howto_write_docs/">Writing Documentation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../contribute/howto_write_code/">Writing Code</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">HPC Cluster</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../cluster/info/">General Information</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../cluster/apptainer/">Apptainer Build</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Creating Training Data</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../training_data/overview/">General Approach</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../training_data/charm/">CHARM Segmentation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../training_data/synth_seg/">SynthSeg Segmentation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../training_data/FullHeadSeg/">FullHeadSeg</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../training_data/upscaling/">Label Upscaling</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Documentation</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">API Reference</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#brainseg">brainseg</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#scale_label_image">scale_label_image</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#brainseg.scale_label_image">scale_label_image</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#brainseg.scale_label_image.Options">Options</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#brainseg.scale_label_image.Options.image_file">image_file</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#brainseg.scale_label_image.Options.output_dir">output_dir</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#brainseg.scale_label_image.Options.resolution">resolution</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#brainseg.scale_label_image.Options.sigma">sigma</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#brainseg.scale_label_image.do_resample">do_resample</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#brainseg.scale_label_image.gaussian_filter_fft">gaussian_filter_fft</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#brainseg.scale_label_image.gaussian_kernel_3d_fft">gaussian_kernel_3d_fft</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#brainseg.scale_label_image.main">main</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#brainseg.scale_label_image.resample_label_image">resample_label_image</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#brainseg.scale_label_image.smooth_label_image">smooth_label_image</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Brain Segmentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">API Documentation</li>
+      <li class="breadcrumb-item active">API Reference</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/halirutan/BrainSegmentation/edit/main/docs/api.md">Edit on BrainSegmentation</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="api-reference">API Reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h1>
+<p>This section provides detailed API documentation for the Brain Segmentation project.</p>
+<h2 id="brainseg">brainseg<a class="headerlink" href="#brainseg" title="Permanent link">&para;</a></h2>
+<p>The <code>brainseg</code> package contains modules for brain segmentation tasks.</p>
+<h3 id="scale_label_image">scale_label_image<a class="headerlink" href="#scale_label_image" title="Permanent link">&para;</a></h3>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="brainseg.scale_label_image"></a>
+    <div class="doc doc-contents first">
+
+        <p>This module provides functionality for manipulating and resampling medical images in the NIfTI format
+using PyTorch and NumPy as primary computational backends.</p>
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="brainseg.scale_label_image.Options" class="doc doc-heading">
+            <code>Options</code>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+<a href="#brainseg.scale_label_image.Options" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+
+        <p>This program resamples a label image to a specified resolution using the NIfTI format.
+It supports optional Gaussian smoothing during the rescaling process.
+The user can provide input parameters, including the image file, output directory, desired resolution (in mm),
+and an optional smoothing sigma.
+The rescaled image is saved in the specified output directory.</p>
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>src/brainseg/scale_label_image.py</code></summary>
+                <pre class="codehilite"><code class="language-python">@dataclass
+class Options:
+    """
+    This program resamples a label image to a specified resolution using the NIfTI format.
+    It supports optional Gaussian smoothing during the rescaling process.
+    The user can provide input parameters, including the image file, output directory, desired resolution (in mm),
+    and an optional smoothing sigma.
+    The rescaled image is saved in the specified output directory.
+    """
+
+    image_file: str
+    """Input label image for rescaling."""
+
+    output_dir: str
+    """
+    Output directory where to store the resampled image.
+    """
+
+    resolution: float
+    """
+    Resolution in mm for the resampled label image.
+    """
+
+    sigma: Optional[float] = None
+    """
+    If not None, it must be a float value specifying the standard deviation of the Gaussian kernel
+    to be used for smoothing the label image.
+    """</code></pre>
+              </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="brainseg.scale_label_image.Options.image_file" class="doc doc-heading">
+            <code class=" language-python">image_file</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#brainseg.scale_label_image.Options.image_file" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Input label image for rescaling.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="brainseg.scale_label_image.Options.output_dir" class="doc doc-heading">
+            <code class=" language-python">output_dir</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#brainseg.scale_label_image.Options.output_dir" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Output directory where to store the resampled image.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="brainseg.scale_label_image.Options.resolution" class="doc doc-heading">
+            <code class=" language-python">resolution</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#brainseg.scale_label_image.Options.resolution" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Resolution in mm for the resampled label image.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="brainseg.scale_label_image.Options.sigma" class="doc doc-heading">
+            <code class=" language-python">sigma = None</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#brainseg.scale_label_image.Options.sigma" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>If not None, it must be a float value specifying the standard deviation of the Gaussian kernel
+to be used for smoothing the label image.</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="brainseg.scale_label_image.do_resample" class="doc doc-heading">
+            <code class=" language-python">do_resample(nifti, resolution_out, device='cpu')</code>
+
+<a href="#brainseg.scale_label_image.do_resample" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Resamples a 3D NIfTI image to the desired resolution using nearest neighbor interpolation.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>nifti</code></b>
+                  (<code><span title="nibabel.Nifti1Image">Nifti1Image</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The input 3D NIfTI image to be resampled.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>resolution_out</code></b>
+                  (<code><span title="numpy.ndarray">ndarray</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The desired output resolution, given as a
+1D array containing three elements: (z-resolution, y-resolution,
+x-resolution).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>device</code></b>
+                  (<code><span title="str">str</span> | <span title="torch.device">device</span></code>, default:
+                      <code>&#39;cpu&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The device where computations are performed. Defaults to "cpu".</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="torch.Tensor">Tensor</span></code>
+              –
+              <div class="doc-md-description">
+                <p>torch.Tensor: Resampled image data as a PyTorch tensor.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="RuntimeError">RuntimeError</span></code>
+              –
+              <div class="doc-md-description">
+                <p>If the input image does not have exactly 3 dimensions.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/brainseg/scale_label_image.py</code></summary>
+              <pre class="codehilite"><code class="language-python">def do_resample(
+        nifti: nib.Nifti1Image,
+        resolution_out: np.ndarray,
+        device: str | torch.device = "cpu") -&gt; torch.Tensor:
+    """
+    Resamples a 3D NIfTI image to the desired resolution using nearest neighbor interpolation.
+
+    Args:
+        nifti (nib.Nifti1Image): The input 3D NIfTI image to be resampled.
+        resolution_out (np.ndarray): The desired output resolution, given as a
+            1D array containing three elements: (z-resolution, y-resolution,
+            x-resolution).
+        device (str | torch.device): The device where computations are performed. Defaults to "cpu".
+
+    Returns:
+        torch.Tensor: Resampled image data as a PyTorch tensor.
+
+    Raises:
+        RuntimeError: If the input image does not have exactly 3 dimensions.
+    """
+    header = nifti.header
+    # noinspection PyUnresolvedReferences
+    dim: tuple[int, int, int] = header.get_data_shape()
+    if len(dim) != 3:
+        raise RuntimeError("Image data does not have 3 dimensions")
+
+    # noinspection PyUnresolvedReferences
+    resolution_in = header["pixdim"][1:4]
+    step_size: np.ndarray[np.float32] = resolution_out / resolution_in
+    zs = torch.arange(0, dim[0], step_size[0]).to(dtype=torch.int, device=device)
+    ys = torch.arange(0, dim[1], step_size[1]).to(dtype=torch.int, device=device)
+    xs = torch.arange(0, dim[2], step_size[2]).to(dtype=torch.int, device=device)
+    numpy_data = nifti.get_fdata()
+    torch_data = torch.tensor(numpy_data, dtype=torch.int, device=device)
+    data_resampled = torch_data[torch.meshgrid(zs, ys, xs, indexing="ij")]
+    return data_resampled</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="brainseg.scale_label_image.gaussian_filter_fft" class="doc doc-heading">
+            <code class=" language-python">gaussian_filter_fft(tensor, sigma)</code>
+
+<a href="#brainseg.scale_label_image.gaussian_filter_fft" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Filters a 3D tensor using a Gaussian kernel in the frequency domain.</p>
+<p>This function performs filtering of a 3-dimensional input tensor using a Gaussian kernel in the Fourier domain.
+The input tensor is transformed into the frequency domain via FFT, multiplied element-wise with the FFT of the
+Gaussian kernel, and then transformed back to the spatial domain using the inverse FFT.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>tensor</code></b>
+                  (<code><span title="torch.Tensor">Tensor</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>A 3D PyTorch tensor to be filtered. The tensor must have three dimensions (ndim == 3).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sigma</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The standard deviation of the Gaussian kernel used for filtering.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="torch.Tensor">Tensor</span></code>
+              –
+              <div class="doc-md-description">
+                <p>torch.Tensor: The filtered tensor in the spatial domain.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/brainseg/scale_label_image.py</code></summary>
+              <pre class="codehilite"><code class="language-python">def gaussian_filter_fft(tensor: torch.Tensor, sigma: float) -&gt; torch.Tensor:
+    """
+    Filters a 3D tensor using a Gaussian kernel in the frequency domain.
+
+    This function performs filtering of a 3-dimensional input tensor using a Gaussian kernel in the Fourier domain.
+    The input tensor is transformed into the frequency domain via FFT, multiplied element-wise with the FFT of the
+    Gaussian kernel, and then transformed back to the spatial domain using the inverse FFT.
+
+    Args:
+        tensor: A 3D PyTorch tensor to be filtered. The tensor must have three dimensions (ndim == 3).
+        sigma: The standard deviation of the Gaussian kernel used for filtering.
+
+    Returns:
+        torch.Tensor: The filtered tensor in the spatial domain.
+    """
+    assert tensor.ndim == 3, "Input tensor must be 3D"
+
+    device = tensor.device
+    shape = tensor.shape
+
+    tensor_fft = torch.fft.fftn(tensor)
+    kernel_fft = gaussian_kernel_3d_fft(shape, sigma, device=device)
+    filtered_fft = tensor_fft * kernel_fft
+    filtered = torch.fft.ifftn(filtered_fft).real
+    return filtered</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="brainseg.scale_label_image.gaussian_kernel_3d_fft" class="doc doc-heading">
+            <code class=" language-python">gaussian_kernel_3d_fft(shape, sigma, device='cpu')</code>
+
+<a href="#brainseg.scale_label_image.gaussian_kernel_3d_fft" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Generates a 3D Gaussian kernel in the frequency domain using FFT.</p>
+<p>This function computes a 3D Gaussian kernel directly in the frequency domain.
+It takes the shape of the desired kernel, the standard deviation (sigma),
+and the device where the computation should be performed.
+The Gaussian kernel in the frequency domain is computed based on the squared Euclidean distance
+and the provided sigma.</p>
+<p>The analytical formula for the Gaussian kernel in the frequency domain can be found using the following
+Mathematica code for a multi-normal distribution and its Fourier transform::</p>
+<pre class="codehilite"><code>covMatrix = {{sigma^2, 0, 0}, {0, sigma^2, 0}, {0, 0, sigma^2}};
+distribution = PDF[MultinormalDistribution[covMatrix], {x, y, z}]
+kernel = FullSimplify[distribution, sigma &gt; 0]
+Integrate[kernel, {x, -Infinity, Infinity}, {y, -Infinity, Infinity}, {z, -Infinity, Infinity},
+    Assumptions -&gt; sigma &gt; 0]
+FourierTransform[kernel, {x, y, z}, {X, Y, Z}, FourierParameters -&gt; {0, -2*Pi}]
+</code></pre>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>shape</code></b>
+                  (<code><span title="tuple">tuple</span>[<span title="int">int</span>, <span title="int">int</span>, <span title="int">int</span>] | <span title="torch.Size">Size</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The shape of the 3D Gaussian kernel, defined as (nz, ny, nx), where nz, ny, and nx are the number of
+elements along the z, y, and x dimensions respectively.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sigma</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The standard deviation of the Gaussian distribution.
+It determines the spread of the Gaussian kernel.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>device</code></b>
+                  (<code><span title="str">str</span> | <span title="torch.device">device</span></code>, default:
+                      <code>&#39;cpu&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The device where the computation should be performed,
+either 'cpu' or 'cuda'. The default is 'cpu'.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="torch.Tensor">Tensor</span></code>
+              –
+              <div class="doc-md-description">
+                <p>torch.Tensor: A 3D tensor representing the Gaussian kernel in the</p>
+              </div>
+            </li>
+            <li>
+                  <code><span title="torch.Tensor">Tensor</span></code>
+              –
+              <div class="doc-md-description">
+                <p>frequency domain. The tensor has the same shape as the input <code>shape</code>.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/brainseg/scale_label_image.py</code></summary>
+              <pre class="codehilite"><code class="language-python">def gaussian_kernel_3d_fft(
+        shape: tuple[int, int, int] | torch.Size,
+        sigma: float,
+        device: str | torch.device = 'cpu') -&gt; torch.Tensor:
+    """
+        Generates a 3D Gaussian kernel in the frequency domain using FFT.
+
+        This function computes a 3D Gaussian kernel directly in the frequency domain.
+        It takes the shape of the desired kernel, the standard deviation (sigma),
+        and the device where the computation should be performed.
+        The Gaussian kernel in the frequency domain is computed based on the squared Euclidean distance
+        and the provided sigma.
+
+        The analytical formula for the Gaussian kernel in the frequency domain can be found using the following
+        Mathematica code for a multi-normal distribution and its Fourier transform::
+
+            covMatrix = {{sigma^2, 0, 0}, {0, sigma^2, 0}, {0, 0, sigma^2}};
+            distribution = PDF[MultinormalDistribution[covMatrix], {x, y, z}]
+            kernel = FullSimplify[distribution, sigma &gt; 0]
+            Integrate[kernel, {x, -Infinity, Infinity}, {y, -Infinity, Infinity}, {z, -Infinity, Infinity},
+                Assumptions -&gt; sigma &gt; 0]
+            FourierTransform[kernel, {x, y, z}, {X, Y, Z}, FourierParameters -&gt; {0, -2*Pi}]
+
+        Args:
+            shape: The shape of the 3D Gaussian kernel, defined as (nz, ny, nx), where nz, ny, and nx are the number of
+                elements along the z, y, and x dimensions respectively.
+            sigma: The standard deviation of the Gaussian distribution.
+                It determines the spread of the Gaussian kernel.
+            device: The device where the computation should be performed,
+                either 'cpu' or 'cuda'. The default is 'cpu'.
+
+        Returns:
+            torch.Tensor: A 3D tensor representing the Gaussian kernel in the
+            frequency domain. The tensor has the same shape as the input `shape`.
+    """
+    if not sigma &gt; 0.0:
+        raise ValueError(f"Sigma must be positive, got {sigma}")
+    nz, ny, nx = shape
+    z = torch.fft.fftfreq(nz, device=device).view(nz, 1, 1)
+    y = torch.fft.fftfreq(ny, device=device).view(1, ny, 1)
+    x = torch.fft.fftfreq(nx, device=device).view(1, 1, nx)
+    squared_dist = x ** 2 + y ** 2 + z ** 2
+    kernel_fft = torch.exp(-2.0 * torch.pi**2 * squared_dist * sigma ** 2)
+    return kernel_fft</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="brainseg.scale_label_image.main" class="doc doc-heading">
+            <code class=" language-python">main()</code>
+
+<a href="#brainseg.scale_label_image.main" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Main entry point for the program.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/brainseg/scale_label_image.py</code></summary>
+              <pre class="codehilite"><code class="language-python">def main():
+    """
+    Main entry point for the program.
+    """
+    parser = ArgumentParser()
+    # noinspection PyTypeChecker
+    parser.add_arguments(Options, "options")
+    args = parser.parse_args()
+    options: Options = args.options
+
+    if isinstance(options.output_dir, str) and os.path.isdir(options.output_dir):
+        logger.debug(f"Using output directory: '{options.output_dir}'")
+    else:
+        logger.error(f"Output directory does not exist: '{options.output_dir}'")
+        sys.exit(1)
+
+    if isinstance(options.image_file, str) and os.path.isfile(options.image_file):
+        logger.debug(f"Using label image: '{options.image_file}'")
+    else:
+        logger.error(f"Provided image is not a regular file: '{options.image_file}'")
+        sys.exit(1)
+
+    resolution = options.resolution
+    output_dir = options.output_dir
+
+    image_file = options.image_file
+    nifti = nib.load(image_file)
+    if not isinstance(nifti, nib.Nifti1Image):
+        logger.error(f"Image {image_file} is not a Nifti1 image")
+        sys.exit(1)
+
+    result = resample_label_image(nifti, resolution)
+
+    if not isinstance(result, nib.Nifti1Image):
+        logger.error("Unable to rescale image.")
+
+    file_base = os.path.basename(image_file)
+    output_file = os.path.join(output_dir, file_base)
+    nib.save(result, output_file)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="brainseg.scale_label_image.resample_label_image" class="doc doc-heading">
+            <code class=" language-python">resample_label_image(nifti, resolution_out, sigma=None, device='cpu')</code>
+
+<a href="#brainseg.scale_label_image.resample_label_image" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Resample a label image to a new resolution.
+Note: This is intended for internal use only to upsample label images that are in a too low resolution.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>nifti</code></b>
+                  (<code><span title="nibabel.Nifti1Image">Nifti1Image</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The input label-image represented as a nib.Nifti1Image object.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>resolution_out</code></b>
+                  (<code><span title="typing.Union">Union</span>[<span title="float">float</span>, <span title="typing.List">List</span>[<span title="float">float</span>]]</code>)
+              –
+              <div class="doc-md-description">
+                <p>The desired output resolution. It can be a single float value or a list of three float values
+representing the desired voxel size in mm in x, y, and z directions respectively.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sigma</code></b>
+                  (<code><span title="typing.Optional">Optional</span>[<span title="float">float</span>]</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>If not None, it must be a float value specifying the standard deviation of the Gaussian kernel to be
+used for smoothing the label image.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>device</code></b>
+                  (<code><span title="str">str</span> | <span title="torch.device">device</span></code>, default:
+                      <code>&#39;cpu&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The device where computations are performed. Defaults to "cpu".</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>        
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/brainseg/scale_label_image.py</code></summary>
+              <pre class="codehilite"><code class="language-python">def resample_label_image(nifti: nib.Nifti1Image,
+                         resolution_out: Union[float, List[float]],
+                         sigma: Optional[float] = None,
+                         device: str | torch.device = "cpu") -&gt; nib.Nifti1Image:
+    """
+    Resample a label image to a new resolution.
+    Note: This is intended for internal use only to upsample label images that are in a too low resolution.
+
+    Args:
+        nifti: The input label-image represented as a nib.Nifti1Image object.
+        resolution_out: The desired output resolution. It can be a single float value or a list of three float values
+            representing the desired voxel size in mm in x, y, and z directions respectively.
+        sigma: If not None, it must be a float value specifying the standard deviation of the Gaussian kernel to be
+            used for smoothing the label image.
+        device: The device where computations are performed. Defaults to "cpu".
+    Returns:
+        The resampled label-image represented as a nib.Nifti1Image object.
+    """
+    if isinstance(resolution_out, float):
+        resolution_out = np.array([resolution_out] * 3)
+    else:
+        resolution_out = np.array(resolution_out)
+    data_resampled = do_resample(nifti, resolution_out, device=device)
+    if sigma is not None:
+        data_resampled = smooth_label_image(data_resampled, sigma)
+    header = nifti.header
+    # noinspection PyUnresolvedReferences
+    header.set_zooms(resolution_out)
+    # noinspection PyTypeChecker
+    return nib.Nifti1Image(data_resampled.numpy(force=True).astype(np.uint16), nifti.affine, header)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="brainseg.scale_label_image.smooth_label_image" class="doc doc-heading">
+            <code class=" language-python">smooth_label_image(data, sigma)</code>
+
+<a href="#brainseg.scale_label_image.smooth_label_image" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Smooth a label image using a Gaussian kernel of size sigma.</p>
+<p>This function applies Gaussian smoothing to a label image tensor and assigns each label the
+maximum probability using a Gaussian Kernel. It processes each unique label separately, applies
+3D FFT-based Gaussian smoothing, and updates the resulting tensor with the labels based on
+maximum probability.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>data</code></b>
+                  (<code><span title="torch.Tensor">Tensor</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>A tensor containing the label image to be smoothed.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>sigma</code></b>
+                  (<code><span title="float">float</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Standard deviation for the Gaussian kernel used for smoothing.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="torch.Tensor">Tensor</span></code>
+              –
+              <div class="doc-md-description">
+                <p>torch.Tensor: A tensor representing the smoothed label image.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/brainseg/scale_label_image.py</code></summary>
+              <pre class="codehilite"><code class="language-python">def smooth_label_image(data: torch.Tensor, sigma: float) -&gt; torch.Tensor:
+    """
+    Smooth a label image using a Gaussian kernel of size sigma.
+
+    This function applies Gaussian smoothing to a label image tensor and assigns each label the
+    maximum probability using a Gaussian Kernel. It processes each unique label separately, applies
+    3D FFT-based Gaussian smoothing, and updates the resulting tensor with the labels based on
+    maximum probability.
+
+    Args:
+        data: A tensor containing the label image to be smoothed.
+        sigma: Standard deviation for the Gaussian kernel used for smoothing.
+
+    Returns:
+        torch.Tensor: A tensor representing the smoothed label image.
+    """
+    labels = torch.unique(data)
+    kernel_fft = gaussian_kernel_3d_fft(data.shape, sigma, device=data.device)
+    max_probabilities = torch.zeros_like(data, dtype=torch.float32)
+    result = torch.zeros_like(data)
+    logger.info(f"Smoothing {len(labels)} labels")
+    tqd = tqdm.tqdm(labels, desc="Smoothing label")
+    for label in tqd:
+        tqd.set_postfix({"label": label})
+        filtered = torch.fft.ifftn(torch.fft.fftn((data == label).float()) * kernel_fft).real
+        mask2 = filtered &gt; max_probabilities
+        result[mask2] = label
+        max_probabilities[mask2] = filtered[mask2]
+    return result</code></pre>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../training_data/upscaling/" class="btn btn-neutral float-left" title="Label Upscaling"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>Copyright &copy; 2023 Brain Segmentation Team</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/halirutan/BrainSegmentation" class="fa fa-code-fork" style="color: #fcfcfc"> BrainSegmentation</a>
+        </span>
+    
+    
+      <span><a href="../training_data/upscaling/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
