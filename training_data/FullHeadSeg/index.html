@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Brain Segmentation Team" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>FullHeadSeg - Brain Segmentation</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "FullHeadSeg";
+        var mkdocs_page_input_path = "training_data/FullHeadSeg.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Brain Segmentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Contributing</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../contribute/contributing/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../contribute/howto_write_docs/">Writing Documentation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../contribute/howto_write_code/">Writing Code</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">HPC Cluster</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../cluster/info/">General Information</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../cluster/apptainer/">Apptainer Build</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Creating Training Data</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../overview/">General Approach</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../charm/">CHARM Segmentation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../synth_seg/">SynthSeg Segmentation</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">FullHeadSeg</a>
+    <ul class="current">
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../upscaling/">Label Upscaling</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Documentation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../api/">API Reference</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Brain Segmentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Creating Training Data</li>
+      <li class="breadcrumb-item active">FullHeadSeg</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/halirutan/BrainSegmentation/edit/main/docs/training_data/FullHeadSeg.md">Edit on BrainSegmentation</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h2 id="fullhead-segmentation-pipeline-documentation">FullHead Segmentation Pipeline Documentation<a class="headerlink" href="#fullhead-segmentation-pipeline-documentation" title="Permanent link">&para;</a></h2>
+<p>This document provides a detailed overview of the FullHead segmentation pipeline,
+combining SynthSeg and CHARM segmentations from brain MRI datasets to create consistent overlay segmentation maps.</p>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>The pipeline integrates two advanced segmentation methods:</p>
+<ul>
+<li><strong>SynthSeg:</strong> A robust segmentation method using machine learning, particularly suited for clinical datasets.</li>
+<li><strong>CHARM (SimNIBS):</strong> A segmentation tool primarily used for head modeling in neurostimulation applications.</li>
+</ul>
+<p>The combination ensures precise and consistent segmentation, suitable for generating training data or subsequent analyses.</p>
+<hr />
+<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
+<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
+<p>Ensure the following software and environments are set up:</p>
+<ul>
+<li><strong>Python 3.8 or newer</strong></li>
+<li><strong>Conda environments:</strong></li>
+<li><code>synth_seg_orig_py38</code></li>
+<li><code>simnibs_env</code></li>
+<li>
+<p>For FullHead segmentation, ensure the availability of both SynthSeg and CHARM environments.</p>
+</li>
+<li>
+<p><strong>SynthSeg script and directory paths:</strong></p>
+</li>
+<li>Path to <code>SynthSeg_predict.py</code> script</li>
+<li>Path to SynthSeg root directory</li>
+</ul>
+<hr />
+<h3 id="running-the-pipeline">Running the Pipeline<a class="headerlink" href="#running-the-pipeline" title="Permanent link">&para;</a></h3>
+<p>Execute the pipeline via the command line:</p>
+<pre class="codehilite"><code class="language-shell">python create_fh_seg.py \
+  --input_dir &lt;input_dir&gt; \
+  --output_dir &lt;output_dir&gt; \
+  --synthseg_script &lt;synthseg_script&gt; \
+  --synthseg_dir &lt;synthseg_dir&gt; \
+  --synthseg_env &lt;synthseg_env&gt; \
+  --charm_env &lt;charm_env&gt;
+</code></pre>
+
+<h3 id="arguments">Arguments:<a class="headerlink" href="#arguments" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><code>--input_dir</code>:<br />
+  Path to the directory containing input NIfTI files (<code>.nii</code> or <code>.nii.gz</code>).</p>
+</li>
+<li>
+<p><code>--output_dir</code>:<br />
+  Path to the directory where the generated segmentation overlays will be saved.</p>
+</li>
+<li>
+<p><code>--synthseg_script</code>:<br />
+  Absolute path to the <code>SynthSeg_predict.py</code> script.</p>
+</li>
+<li>
+<p><code>--synthseg_dir</code>:<br />
+  Absolute path to the SynthSeg root directory.</p>
+</li>
+<li>
+<p><code>--synthseg_env</code>:<br />
+  Name of the conda environment used for running SynthSeg.</p>
+</li>
+<li>
+<p><code>--charm_env</code>:<br />
+  Name of the conda environment used for running CHARM (SimNIBS).</p>
+</li>
+</ul>
+<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
+<pre class="codehilite"><code class="language-shell">python create_fh_seg.py \
+  --input_dir /path/to/input_dir \
+  --output_dir /path/to/output_dir \
+  --synthseg_script /path/to/SynthSeg_predict.py \
+  --synthseg_dir /path/to/SynthSeg \
+  --synthseg_env synth_seg_orig_py38 \
+  --charm_env simnibs_env
+</code></pre>
+
+<hr />
+<h2 id="pipeline-steps">Pipeline Steps<a class="headerlink" href="#pipeline-steps" title="Permanent link">&para;</a></h2>
+<p>The pipeline performs the following sequential steps:</p>
+<ol>
+<li><strong>SynthSeg Segmentation:</strong> Automatically segments brain structures robustly from the input MRI.</li>
+<li><strong>CHARM Segmentation:</strong> Performs head model segmentation, including specific anatomical labels.</li>
+<li><strong>Label Isolation and Resampling:</strong> Specific CHARM labels (501, 502, 506, 507, 508, 509, 511, 512, 514, 515, 516, 517, 520, 530) are isolated, and SynthSeg segmentation is resampled to match the CHARM segmentation resolution.</li>
+<li><strong>Overlay Creation:</strong> Combines both segmentations into a unified segmentation map, with SynthSeg labels taking precedence over CHARM labels where they overlap (SynthSeg labels are used wherever they exist, and CHARM labels are used only in areas where SynthSeg does not provide a label).</li>
+<li><strong>Label Consistency Verification:</strong> Ensures all generated overlays share identical sets of segmentation labels.</li>
+</ol>
+<hr />
+<h2 id="output-files">Output Files<a class="headerlink" href="#output-files" title="Permanent link">&para;</a></h2>
+<h3 id="final-output">Final Output<a class="headerlink" href="#final-output" title="Permanent link">&para;</a></h3>
+<p>The main output overlays are stored with filenames structured as:</p>
+<pre class="codehilite"><code class="language-shell">&lt;basename_of_input_file&gt;_overlay.nii.gz
+</code></pre>
+
+<h3 id="intermediate-files">Intermediate Files<a class="headerlink" href="#intermediate-files" title="Permanent link">&para;</a></h3>
+<p>The pipeline also generates several intermediate files during processing:</p>
+<ul>
+<li><code>&lt;basename_of_input_file&gt;_synthseg.nii.gz</code>: SynthSeg segmentation output</li>
+<li><code>&lt;basename_of_input_file&gt;_charm/</code>: Directory containing CHARM segmentation results</li>
+<li><code>&lt;basename_of_input_file&gt;_charm_filtered.nii.gz</code>: CHARM segmentation with isolated labels</li>
+<li><code>&lt;basename_of_input_file&gt;_synthseg_resampled.nii.gz</code>: SynthSeg segmentation resampled to match CHARM resolution</li>
+</ul>
+<h2 id="label-consistency-check">Label Consistency Check<a class="headerlink" href="#label-consistency-check" title="Permanent link">&para;</a></h2>
+<p>The pipeline automatically verifies label consistency across all generated segmentation overlays.
+If discrepancies are found, the process halts and explicitly identifies the inconsistent files.</p>
+<hr />
+<h3 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h3>
+<p>Unit tests are provided to ensure functionality:</p>
+<ul>
+<li><strong><code>test_isolate_labels</code>:</strong> Confirms the isolation of specified labels within segmentation data.</li>
+<li><strong><code>test_resample_to_target</code>:</strong> Validates correct resampling of segmentations to target resolutions.</li>
+<li><strong><code>test_verify_label_consistency_across_overlays</code>:</strong> Checks consistency of segmentation labels across multiple overlay files.</li>
+</ul>
+<p>Ensure tests are run in environments with appropriate SynthSeg and CHARM setups for complete pipeline validation.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../synth_seg/" class="btn btn-neutral float-left" title="SynthSeg Segmentation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../upscaling/" class="btn btn-neutral float-right" title="Label Upscaling">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>Copyright &copy; 2023 Brain Segmentation Team</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/halirutan/BrainSegmentation" class="fa fa-code-fork" style="color: #fcfcfc"> BrainSegmentation</a>
+        </span>
+    
+    
+      <span><a href="../synth_seg/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../upscaling/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Brain Segmentation Team" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>General Information - Brain Segmentation</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "General Information";
+        var mkdocs_page_input_path = "cluster/info.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Brain Segmentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Contributing</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../contribute/contributing/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../contribute/howto_write_docs/">Writing Documentation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../contribute/howto_write_code/">Writing Code</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">HPC Cluster</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">General Information</a>
+    <ul class="current">
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../apptainer/">Apptainer Build</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Creating Training Data</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../training_data/overview/">General Approach</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../training_data/charm/">CHARM Segmentation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../training_data/synth_seg/">SynthSeg Segmentation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../training_data/FullHeadSeg/">FullHeadSeg</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../training_data/upscaling/">Label Upscaling</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Documentation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../api/">API Reference</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Brain Segmentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">HPC Cluster</li>
+      <li class="breadcrumb-item active">General Information</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/halirutan/BrainSegmentation/edit/main/docs/cluster/info.md">Edit on BrainSegmentation</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="mpcdf-high-performance-cluster">MPCDF High-Performance Cluster<a class="headerlink" href="#mpcdf-high-performance-cluster" title="Permanent link">&para;</a></h1>
+<p>The Max Planck Computing and Data Facility (MPCDF) provides high-performance computing (HPC) resources to support 
+computational and data-driven research within the Max Planck Society.
+These resources are designed for large-scale simulations, complex data analyses, and other intensive scientific workloads.</p>
+<p>MPCDF operates several powerful computing systems. The flagship system, <strong>Raven</strong>, includes over 1,500 compute nodes
+based on Intel Xeon processors, many of which are equipped with large memory and high-speed interconnects.
+It also features GPU-accelerated nodes with NVIDIA A100 GPUs, ideal for machine learning and parallel computations.
+Another system, <strong>Viper</strong>, offers AMD EPYC-based nodes with high core counts and large memory configurations,
+optimized for both general-purpose and memory-intensive applications.</p>
+<p>Users access the systems remotely via secure SSH connections.
+Work is typically done through a shared Linux environment with user-configurable software modules.
+Job scheduling is managed using the Slurm workload manager, allowing users to submit computational tasks that
+are distributed across the available resources.
+The systems support batch processing as well as interactive sessions for development and debugging.</p>
+<p>Important Links:</p>
+<ul>
+<li><a href="https://selfservice.mpcdf.mpg.de/index.php?r=site%2Flogin">Request Access</a></li>
+<li><a href="https://docs.mpcdf.mpg.de/doc/computing/raven-user-guide.html">Raven Documentation</a></li>
+<li><a href="https://docs.mpcdf.mpg.de/doc/computing/viper-user-guide.html">Viper CPU Documentation</a></li>
+<li><a href="https://docs.mpcdf.mpg.de/doc/computing/viper-gpu-user-guide.html">Viper GPU Documentation</a></li>
+</ul>
+<h1 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h1>
+<p>In general, please check the <a href="https://docs.mpcdf.mpg.de/faq/index.html">MPCDF FAQ</a>.
+Here are some specific questions that we found useful.</p>
+<h2 id="what-software-is-available-on-the-cluster">What software is available on the cluster?<a class="headerlink" href="#what-software-is-available-on-the-cluster" title="Permanent link">&para;</a></h2>
+<p>MPCDF uses as <em>module</em> system that allows you to load software packages on demand.
+Please <a href="https://docs.mpcdf.mpg.de/doc/computing/software/environment-modules.html">read here for more information</a>.</p>
+<h2 id="do-i-need-to-type-my-password-every-time-im-logging-in-with-ssh">Do I need to type my password every time I'm logging in with SSH<a class="headerlink" href="#do-i-need-to-type-my-password-every-time-im-logging-in-with-ssh" title="Permanent link">&para;</a></h2>
+<p>No. On Linux and macOS, you can use an SSH ControlMaster configuration that allows you to reuse your SSH
+connection for several hours. This setup also lets you directly log into the raven and viper nodes without having to
+go through the gateway machines.
+<a href="https://docs.mpcdf.mpg.de/faq/connecting.html#how-can-i-avoid-having-to-type-my-password-repeatedly">Read here</a></p>
+<h2 id="can-i-test-computations-interactively">Can I test computations interactively?<a class="headerlink" href="#can-i-test-computations-interactively" title="Permanent link">&para;</a></h2>
+<p>Yes, to some degree.
+The login nodes like <code>raven-i</code> or <code>viper-i</code> are suitable for interactive use, but they are not suitable for running
+computations because they are too weak, are used by too many people, and don't contain GPUs.
+However, you can specify dedicated [SLURM partitions] and <code>srun</code> to get a real interactive session for a limited 
+amount of time.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Different partitions have different restrictions for the resources. E.g., an interactive GPU session on Raven
+cannot exceed 15 minutes.</p>
+</div>
+<p>Here are the commands for various partitions but also read further for info for
+<a href="https://docs.mpcdf.mpg.de/doc/computing/raven-user-guide.html#interactive-debug-runs">Raven</a>,
+<a href="https://docs.mpcdf.mpg.de/doc/computing/raven-user-guide.html#interactive-debug-runs">Viper GPU</a>,
+and <a href="https://docs.mpcdf.mpg.de/doc/computing/raven-user-guide.html#interactive-debug-runs">Viper CPU</a>:</p>
+<p>Raven interactive CPU session for 30 minutes:</p>
+<pre class="codehilite"><code class="language-shell">srun --verbose -p interactive --time=00:30:00 --pty bash
+</code></pre>
+
+<p>Raven interactive GPU session with an A100 GPU for 15 minutes:</p>
+<pre class="codehilite"><code class="language-shell">srun --verbose --gres=gpu:a100:1 -p gpudev --time=15 --pty bash
+</code></pre>
+
+<h2 id="how-do-i-find-out-about-the-properties-of-slurm-partitions">How do I find out about the properties of SLURM partitions?<a class="headerlink" href="#how-do-i-find-out-about-the-properties-of-slurm-partitions" title="Permanent link">&para;</a></h2>
+<p>All SLURM commands start with an <code>s</code>.
+First, you can list all available partitions in a nicely formatted table like this:</p>
+<pre class="codehilite"><code class="language-shell">sinfo -o &quot;%20P %5D %10c %10m %25f %10G&quot;
+</code></pre>
+
+<p>On Raven, the output will look like the following, and it will show you the partition names and their properties:</p>
+<pre class="codehilite"><code class="language-shell">PARTITION            NODES CPUS       MEMORY     AVAIL_FEATURES            GRES      
+interactive*         2     144        512000     login,icelake             (null)    
+general              144   144        240000     icelake,fhi,cpu           (null)    
+general              1378  144        240000     icelake,cpu               (null)    
+general              157   144        500000     icelake,gpu               gpu:a100:4
+general              32    144        500000     icelake,gpu-bw            gpu:a100:4
+general              4     144        2048000    icelake,hugemem           (null)    
+general              64    144        500000     icelake,largemem          (null)    
+small                144   144        240000     icelake,fhi,cpu           (null)    
+small                1378  144        240000     icelake,cpu               (null)    
+gpu                  157   144        500000     icelake,gpu               gpu:a100:4
+gpu                  32    144        500000     icelake,gpu-bw            gpu:a100:4
+gpu1                 157   144        500000     icelake,gpu               gpu:a100:4
+gpu1                 32    144        500000     icelake,gpu-bw            gpu:a100:4
+rvs                  2     144        240000     icelake,cpu               (null)    
+rvs                  2     144        500000     icelake,gpu               gpu:a100:4
+gpudev               1     144        500000     icelake,gpu               gpu:a100:4
+</code></pre>
+
+<p>Now, to inspect a specific partition in detail, you can use the <code>scontrol</code> command.
+Since we were looking for the partition <code>gpudev</code> before, let's use this as an example:</p>
+<pre class="codehilite"><code class="language-shell">scontrol show partition gpudev     
+</code></pre>
+
+<pre class="codehilite"><code class="language-shell">PartitionName=gpudev
+   AllowGroups=ALL AllowAccounts=ALL AllowQos=ALL
+   AllocNodes=ALL Default=NO CpuBind=cores  QoS=N/A
+   DefaultTime=NONE DisableRootJobs=NO ExclusiveUser=NO GraceTime=0 Hidden=NO
+   MaxNodes=1 MaxTime=00:15:00 MinNodes=1 LLN=NO MaxCPUsPerNode=UNLIMITED MaxCPUsPerSocket=UNLIMITED
+   NodeSets=dev
+   Nodes=ravg1002
+   PriorityJobFactor=1 PriorityTier=1 RootOnly=NO ReqResv=NO OverSubscribe=NO
+   OverTimeLimit=NONE PreemptMode=OFF
+   State=UP TotalCPUs=144 TotalNodes=1 SelectTypeParameters=NONE
+   JobDefaults=DefCpuPerGPU=36
+   DefMemPerNode=125000 MaxMemPerNode=UNLIMITED
+   TRES=cpu=144,mem=500000M,node=1,billing=144,gres/gpu=4,gres/gpu:a100=4
+</code></pre>
+
+<p>Note the <code>MaxTime=00:15:00</code> property.</p>
+<h2 id="can-i-shareaccess-data-of-other-users">Can I share/access data of other users?<a class="headerlink" href="#can-i-shareaccess-data-of-other-users" title="Permanent link">&para;</a></h2>
+<p>Yes. We usually share project data in <code>/ptmp/myuser</code> using <code>setfacl</code> and <code>getfacl</code>.
+Please <a href="https://docs.mpcdf.mpg.de/faq/hpc_systems.html#how-can-i-grant-other-users-access-to-my-files-how-do-i-use-acls">read here for more information</a>.</p>
+<h2 id="slurm-whats-the-point-in-specifying-memory-cores-and-time-requirements">SLURM: What's the point in specifying memory, cores, and time requirements?<a class="headerlink" href="#slurm-whats-the-point-in-specifying-memory-cores-and-time-requirements" title="Permanent link">&para;</a></h2>
+<p>Short answer: The <strong>less</strong> you specify, the <strong>quicker</strong> your job gets scheduled.
+On a system like the HPC, many users compete for recourses.
+The SLURM scheduler tries to find a spot for your job that is as close to your requirements as possible.
+If it can fit your job into a spot, because, e.g., another user doesn't need a whole node and your job only needs a
+bit of computational power, then it will do so.
+On the other hand, if you specify a lot of memory or a lot of cores, then the scheduler might need to put you at the
+back of the queue.
+Therefore, always specify the <strong>least</strong> you need.</p>
+<h1 id="whats-the-difference-between-raven-and-viper">What's the difference between Raven and Viper?<a class="headerlink" href="#whats-the-difference-between-raven-and-viper" title="Permanent link">&para;</a></h1>
+<p>One answer is: Raven is older and Viper is newer.
+The other answer is: Raven has Intel CPUs and NVidia A100 GPUs, while Viper has AMD CPUs and GPUs.
+From a practical point of view, the Viper system is interesting because the AMD architecture offers <em>shared memory</em>
+between CPU and GPU cores (AMD calls these things APU), and it has 128GB per node.
+When you have a GPU accelerated program and you are fine with 40GB NVidia A100 cards, then use Raven.
+Otherwise, it is worth trying Viper.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../contribute/howto_write_code/" class="btn btn-neutral float-left" title="Writing Code"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../apptainer/" class="btn btn-neutral float-right" title="Apptainer Build">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>Copyright &copy; 2023 Brain Segmentation Team</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/halirutan/BrainSegmentation" class="fa fa-code-fork" style="color: #fcfcfc"> BrainSegmentation</a>
+        </span>
+    
+    
+      <span><a href="../../contribute/howto_write_code/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../apptainer/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

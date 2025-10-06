@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Brain Segmentation Team" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Apptainer Build - Brain Segmentation</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Apptainer Build";
+        var mkdocs_page_input_path = "cluster/apptainer.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Brain Segmentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Contributing</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../contribute/contributing/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../contribute/howto_write_docs/">Writing Documentation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../contribute/howto_write_code/">Writing Code</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">HPC Cluster</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../info/">General Information</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Apptainer Build</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#building-the-brainsegmentation-apptainer">Building the BrainSegmentation Apptainer</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Creating Training Data</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../training_data/overview/">General Approach</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../training_data/charm/">CHARM Segmentation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../training_data/synth_seg/">SynthSeg Segmentation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../training_data/FullHeadSeg/">FullHeadSeg</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../training_data/upscaling/">Label Upscaling</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Documentation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../api/">API Reference</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Brain Segmentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">HPC Cluster</li>
+      <li class="breadcrumb-item active">Apptainer Build</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/halirutan/BrainSegmentation/edit/main/docs/cluster/apptainer.md">Edit on BrainSegmentation</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="building-an-apptainer-on-mpcdf">Building an Apptainer on MPCDF<a class="headerlink" href="#building-an-apptainer-on-mpcdf" title="Permanent link">&para;</a></h1>
+<p>Apptainer (formerly known as Singularity) is a container platform specifically designed for scientific computing and
+High-Performance Computing (HPC) environments. Unlike traditional containers, Apptainer is built with security and
+compatibility with research computing systems in mind. It allows scientists and researchers to package their entire
+computational environment, including the operating system, software, libraries, and data, into a single, portable
+container that can run consistently across different computing systems.</p>
+<p>Building an Apptainer can be tricky, sometimes painful.
+However, in general you can think of it as setting up a new machine.
+The recipy of setting up your machine is stored in a <code>.def</code> text file which defines step-by-step what you will 
+install and set up in your Apptainer.
+The <code>.def</code> file has several <code>%name</code> sections that define different stages and the behavior when
+building and running your Apptainer.</p>
+<ol>
+<li>You decide which operating system you want to use. In scientific computing, we usually use Linux. That is the
+   <em>base container</em> your Apptainer will build on.</li>
+<li>What you will get is a fresh Linux installation. Now you can install the software you need, and you can use the
+   distribution's package manager. So on an Ubuntu, you use <code>apt get</code>.</li>
+<li>After your system is set up, you can download and install additional things like Python environments or code from
+   GitHub repositories.</li>
+</ol>
+<p>In the end, your goal is to have a fully self-contained Apptainer that is able to run the computations you need.
+The container itself is just a <code>.sif</code> file and starting or running your new <em>machine</em> is as easy as calling
+<code>apptainer</code> with your <code>.sif</code> file.</p>
+<h2 id="building-the-brainsegmentation-apptainer">Building the BrainSegmentation Apptainer<a class="headerlink" href="#building-the-brainsegmentation-apptainer" title="Permanent link">&para;</a></h2>
+<p>To build a container that contains conda, the BrainSegmentation code, SynthSeg, CHARM Segmentation, and different
+conda environments for each, you can use the following on the MPCDF cluster:</p>
+<pre class="codehilite"><code class="language-shell">git clone https://github.com/halirutan/BrainSegmentation.git
+
+module purge
+module load apptainer
+
+apptainer build mpcdf_raven.sif BrainSegmentation/apptainer/mpcdf_raven.def
+</code></pre>
+
+<p>The <code>apptainer</code> directory also contains an example SLURM script with an accompanying shell script to run a test.
+However, you will need to adapt the paths in the scripts to your needs.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../info/" class="btn btn-neutral float-left" title="General Information"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../training_data/overview/" class="btn btn-neutral float-right" title="General Approach">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>Copyright &copy; 2023 Brain Segmentation Team</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/halirutan/BrainSegmentation" class="fa fa-code-fork" style="color: #fcfcfc"> BrainSegmentation</a>
+        </span>
+    
+    
+      <span><a href="../info/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../training_data/overview/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

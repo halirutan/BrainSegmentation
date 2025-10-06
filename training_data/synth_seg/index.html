@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Brain Segmentation Team" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>SynthSeg Segmentation - Brain Segmentation</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "SynthSeg Segmentation";
+        var mkdocs_page_input_path = "training_data/synth_seg.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Brain Segmentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Contributing</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../contribute/contributing/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../contribute/howto_write_docs/">Writing Documentation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../contribute/howto_write_code/">Writing Code</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">HPC Cluster</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../cluster/info/">General Information</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../cluster/apptainer/">Apptainer Build</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Creating Training Data</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../overview/">General Approach</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../charm/">CHARM Segmentation</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">SynthSeg Segmentation</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#building-a-python-environment-for-synthseg">Building a Python Environment for SynthSeg</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#running-synthseg">Running SynthSeg</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#basic-usage">Basic Usage</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#command-line-options">Command-Line Options</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#example-commands">Example Commands</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../FullHeadSeg/">FullHeadSeg</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../upscaling/">Label Upscaling</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Documentation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../api/">API Reference</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Brain Segmentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Creating Training Data</li>
+      <li class="breadcrumb-item active">SynthSeg Segmentation</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/halirutan/BrainSegmentation/edit/main/docs/training_data/synth_seg.md">Edit on BrainSegmentation</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="synthseg-original-segmentation">SynthSeg (Original) Segmentation<a class="headerlink" href="#synthseg-original-segmentation" title="Permanent link">&para;</a></h1>
+<p>SynthSeg is a deep learning-based method for brain tumor segmentation.
+We use the original implementation from <a href="https://github.com/BBillot/SynthSeg">SynthSeg</a> to create the segmentation of
+the brain that is subsequently combined with the outer head segmentation of <a href="../charm/">CHARM</a> to create the final
+<a href="../FullHeadSeg/">full head segmentation</a></p>
+<div class="admonition warning">
+<p class="admonition-title">GPU acceleration</p>
+<p>Usually, we want to run SynthSeg on a GPU for maximum speed.
+However, the original implementation relies on TensorFlow 2.2, which is quite old.
+On NVIDIA GPUs with CUDA architecture 8.0 or newer, kernels are JIT-compiled from PTX and TensorFlow can take 
+over 30 minutes to start up.
+We found that running SynthSeg on multiple CPU cores instead of a single GPU is much faster and sufficient for
+our purposes.
+See SynthSeg options <code>--cpu</code> and <code>--threads</code> below for more details.</p>
+</div>
+<h2 id="building-a-python-environment-for-synthseg">Building a Python Environment for SynthSeg<a class="headerlink" href="#building-a-python-environment-for-synthseg" title="Permanent link">&para;</a></h2>
+<p>The package dependency files for SynthSeg can be found in the <code>python_setup/SynthSeg</code> directory.
+This includes both the <code>environment.yml</code> file for conda/mamba environment setup and the <code>requirements.txt</code> file for pip dependencies.</p>
+<p>First create a conda environment using miniforge and the <code>environment.yml</code> file:</p>
+<pre class="codehilite"><code class="language-bash"># We use mamba here, but conda is also fine
+cd python_setup/SynthSeg
+mamba env create -f environment.yml
+</code></pre>
+
+<p>Activate the environment and use <code>pip</code> to install the rest of the dependencies:</p>
+<pre class="codehilite"><code class="language-bash">conda activate synth_seg_orig_py38
+pip install -r requirements.txt
+</code></pre>
+
+<p>This will set up a Python 3.8 environment with CUDA 10.1 support and all the necessary dependencies for running SynthSeg,
+including TensorFlow GPU 2.2.0, Keras 2.3.1, and other required packages.</p>
+<h2 id="running-synthseg">Running SynthSeg<a class="headerlink" href="#running-synthseg" title="Permanent link">&para;</a></h2>
+<p>After setting up the Python environment, you can run SynthSeg using the <code>SynthSeg_predict.py</code> script. Below is a guide to the available options:</p>
+<h3 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h3>
+<pre class="codehilite"><code class="language-bash">python ./scripts/commands/SynthSeg_predict.py --i &lt;input_image_or_folder&gt; --o &lt;output_folder&gt;
+</code></pre>
+
+<h3 id="command-line-options">Command-Line Options<a class="headerlink" href="#command-line-options" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--i I</code></td>
+<td>Input image(s) to segment. Can be a path to a single image or to a folder containing multiple images.</td>
+</tr>
+<tr>
+<td><code>--o O</code></td>
+<td>Output folder for segmentation results. Must be a folder if <code>--i</code> designates a folder.</td>
+</tr>
+<tr>
+<td><code>--parc</code></td>
+<td>Perform cortex parcellation in addition to basic segmentation.</td>
+</tr>
+<tr>
+<td><code>--robust</code></td>
+<td>Use robust prediction mode for higher accuracy (slower processing).</td>
+</tr>
+<tr>
+<td><code>--fast</code></td>
+<td>Bypass some postprocessing steps for faster predictions (may reduce accuracy).</td>
+</tr>
+<tr>
+<td><code>--ct</code></td>
+<td>Clip intensities to [0,80] range for CT scans.</td>
+</tr>
+<tr>
+<td><code>--vol VOL</code></td>
+<td>Path to output CSV file with volumes (mm³) for all regions and subjects.</td>
+</tr>
+<tr>
+<td><code>--qc QC</code></td>
+<td>Path to output CSV file with quality control scores for all subjects.</td>
+</tr>
+<tr>
+<td><code>--post POST</code></td>
+<td>Output folder for posterior probability maps. Must be a folder if <code>--i</code> designates a folder.</td>
+</tr>
+<tr>
+<td><code>--resample RESAMPLE</code></td>
+<td>Output folder for resampled images. Must be a folder if <code>--i</code> designates a folder.</td>
+</tr>
+<tr>
+<td><code>--crop CROP [CROP ...]</code></td>
+<td>Size of 3D patches to analyze. Default is 192.</td>
+</tr>
+<tr>
+<td><code>--threads THREADS</code></td>
+<td>Number of CPU cores to use for processing. Default is 1.</td>
+</tr>
+<tr>
+<td><code>--cpu</code></td>
+<td>Force CPU processing instead of GPU (useful when GPU memory is limited).</td>
+</tr>
+<tr>
+<td><code>--v1</code></td>
+<td>Use SynthSeg 1.0 (updated 25/06/22).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example-commands">Example Commands<a class="headerlink" href="#example-commands" title="Permanent link">&para;</a></h3>
+<p>Basic segmentation of a single image:</p>
+<pre class="codehilite"><code class="language-bash">python ./scripts/commands/SynthSeg_predict.py --i input_brain.nii.gz --o output_folder/
+</code></pre>
+
+<p>Batch processing with robust mode and volume calculation:</p>
+<pre class="codehilite"><code class="language-bash">python ./scripts/commands/SynthSeg_predict.py --i input_folder/ --o output_folder/ --robust --vol volume_stats.csv --threads 4
+</code></pre>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../charm/" class="btn btn-neutral float-left" title="CHARM Segmentation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../FullHeadSeg/" class="btn btn-neutral float-right" title="FullHeadSeg">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>Copyright &copy; 2023 Brain Segmentation Team</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/halirutan/BrainSegmentation" class="fa fa-code-fork" style="color: #fcfcfc"> BrainSegmentation</a>
+        </span>
+    
+    
+      <span><a href="../charm/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../FullHeadSeg/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
