@@ -8,9 +8,9 @@ from dataclasses import dataclass
 import os
 import logging
 
+import numpy as np
 import torch
 import nibabel as nib
-import numpy as np
 from simple_parsing import ArgumentParser
 import tqdm
 
@@ -198,7 +198,10 @@ class Options:
     It supports optional Gaussian smoothing during the rescaling process.
     The user can provide input parameters, including the image file, output directory, desired resolution (in mm),
     and an optional smoothing sigma.
-    The rescaled image is saved in the specified output directory.
+    The rescaled image is saved WITH THE SAME NAME in the specified output directory.
+
+    Note: Smoothing is performed after resampling, and each label is smoothed independently.
+    Ensure that enough memory is available for the resampling process.
     """
 
     image_file: str
@@ -220,11 +223,18 @@ class Options:
     to be used for smoothing the label image.
     """
 
+    device: str = "cpu"
+    """
+    PyTorch device to use for computation. Defaults to "cpu", but can be set to "cuda" or other GPU-accelerated devices.
+    """
+
 
 def main():
     """
     Main entry point for the program.
     """
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+    logger.info("Resampling label image")
     parser = ArgumentParser()
     # noinspection PyTypeChecker
     parser.add_arguments(Options, "options")
@@ -243,6 +253,12 @@ def main():
         logger.error(f"Provided image is not a regular file: '{options.image_file}'")
         sys.exit(1)
 
+    if isinstance(options.sigma, float) and options.sigma > 0.0:
+        logger.debug(f"Using smoothing sigma: {options.sigma}")
+    else:
+        logger.error(f"Smoothing sigma must be positive, got {options.sigma}")
+        sys.exit(1)
+
     resolution = options.resolution
     output_dir = options.output_dir
 
@@ -252,7 +268,7 @@ def main():
         logger.error(f"Image {image_file} is not a Nifti1 image")
         sys.exit(1)
 
-    result = resample_label_image(nifti, resolution)
+    result = resample_label_image(nifti, resolution, sigma=options.sigma, device=options.device)
 
     if not isinstance(result, nib.Nifti1Image):
         logger.error("Unable to rescale image.")
